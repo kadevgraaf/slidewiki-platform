@@ -8,6 +8,7 @@ import {NavLink} from 'fluxible-router';
 import {connectToStores} from 'fluxible-addons-react';
 import SlideEditStore from '../../../../../stores/SlideEditStore';
 import DataSourceStore from '../../../../../stores/DataSourceStore';
+import SlideViewStore from '../../../../../stores/SlideViewStore';
 import addSlide from '../../../../../actions/slide/addSlide';
 import saveSlide from '../../../../../actions/slide/saveSlide';
 import loadSlideAll from '../../../../../actions/slide/loadSlideAll';
@@ -76,9 +77,18 @@ class SlideContentEditor extends React.Component {
             //TEST - create slide (before can be saved (=updated))
             //console.log(speakernotes);
             let dataSources = (this.props.DataSourceStore.dataSources !== undefined) ? this.props.DataSourceStore.dataSources : [];
-            this.context.executeAction(saveSlide,
-              {id: currentSelector.sid, deckID: deckID, title: title, content: content, speakernotes: speakernotes, dataSources: dataSources, selector: currentSelector});
-            //console.log('saving slide');
+            let tags = this.props.SlideViewStore.tags? this.props.SlideViewStore: [];
+
+            this.context.executeAction(saveSlide, {
+                id: currentSelector.sid,
+                deckID: deckID,
+                title: title,
+                content: content,
+                speakernotes: speakernotes,
+                dataSources: dataSources,
+                selector: currentSelector,
+                tags: tags
+            });
             this.resize();
         }
         return false;
@@ -188,7 +198,7 @@ class SlideContentEditor extends React.Component {
             }
         });
 
-        CKEDITOR.instances.inlineContent.on('instanceReady', (evt) => {
+        CKEDITOR.instances.inlineContent.on('instanceReady', function() {
         //needs copy of resize function == cannot find this.something in this context.
         //tried ReactDOM.findDOMNode(this.refs.inlineContent).addEventListener('instanceReady', (evt) =>
         //but did not work
@@ -198,9 +208,8 @@ class SlideContentEditor extends React.Component {
             //this.forceUpdate();
             //this.resize();
         //    }
-        /*
-            //do not put borders around empty divs containing SVG elements
-            if ($('.pptx2html [style*="absolute"]').not('.drawing-container').css('borderStyle') !== 'dashed'){
+            if ($('.pptx2html [style*="absolute"]').not('.drawing-container').css('borderStyle') !== 'dashed')
+            {
                 $('.pptx2html [style*="absolute"]').not('.drawing-container').css({'borderStyle': 'dashed', 'borderColor': '#33cc33'});
             }
             let containerwidth = document.getElementById('container').offsetWidth;
@@ -208,37 +217,31 @@ class SlideContentEditor extends React.Component {
             $('.pptx2html').css({'transform': '', 'transform-origin': ''});
             let pptxwidth = $('.pptx2html').width();
             let pptxheight = $('.pptx2html').height();
-            //remove previous event listeners!
-            let scaleratio = containerwidth / pptxwidth;
+            if (containerwidth > pptxwidth)
+            {
+                this.scaleratio = pptxwidth / containerwidth;
+            } else {
+                this.scaleratio = containerwidth / pptxwidth;
+            }
             $('.pptx2html').css({'transform': '', 'transform-origin': ''});
-            $('.pptx2html').css({'transform': 'scale('+scaleratio+','+scaleratio+')', 'transform-origin': 'top left'});
+            $('.pptx2html').css({'transform': 'scale('+this.scaleratio+','+this.scaleratio+')', 'transform-origin': 'top left'});
             require('../../../../../custom_modules/simple-draggable/lib/index.js');
 
             SimpleDraggable('.pptx2html [style*="absolute"]', {
                 onlyX: false,
                 onlyY: false,
-                ratio: scaleratio
+                ratio: this.scaleratio
             });
             SimpleDraggable('.pptx2html > [style*="absolute"] > [style*="absolute"]', {
                 onlyX: false
               , onlyY: false
-              , ratio: scaleratio
+              , ratio: this.scaleratio
             });
-
-            //set height of content panel to at least size of pptx2html + (100 pixels * scaleratio).
-            //this.refs.slideEditPanel.style.height = ((pptxheight + 5 + 20) * this.scaleratio) + 'px';
-            //this.refs.inlineContent.style.height = ((pptxheight + 0 + 20) * this.scaleratio) + 'px';
-            $('.slideEditPanel').height(((pptxheight + 5 + 20) * scaleratio) + 'px');
-            $('.inlineContent').height(((pptxheight + 0 + 20) * scaleratio) + 'px');
-            //show that content is outside of pptx2html box
-            $('.pptx2html').css({'borderStyle': 'none none double none', 'borderColor': '#3366ff', 'box-shadow': '0px 100px 1000px #ff8787'});
-            //fix bug with speakernotes overlapping soure dialog/other elements - SWIK-832
-            $('#inlineSpeakerNotes [style*="absolute"]').css({'position': 'relative', 'zIndex': '0'});*/
-            this.resize();
             if(document.domain !== 'localhost')
             {
                 document.domain = 'slidewiki.org';
             }
+            $('.pptx2html').css({'borderStyle': 'none none double none', 'borderColor': '#3366ff', 'box-shadow': '0px 100px 1000px #ff8787'});
         });
 
 
@@ -256,23 +259,41 @@ class SlideContentEditor extends React.Component {
         }
     }
     resize() {
-        console.log('resize_all');
-        //do not put borders around empty divs containing SVG elements
+        //if(process.env.BROWSER){
+            //require('../../../../../bower_components/reveal.js/css/reveal.css');
+            // Uncomment this to see with the different themes.  Assuming testing for PPTPX2HTML for now
+            // Possible values: ['beige', 'black', 'blood', 'league', 'moon', 'night', 'serif', 'simple', 'sky', 'solarized', 'white']
+            // require('../../../../../bower_components/reveal.js/css/theme/black.css');
+            // require('../../../../../bower_components/reveal.js/css/theme/black.css');
+            //require('../../SetupReveal.css');
+            /*add border*/
+            //alert($(".pptx2html [style*='absolute']").css('borderStyle'));
         if ($('.pptx2html [style*="absolute"]').not('.drawing-container').css('borderStyle') !== 'dashed') {
             $('.pptx2html [style*="absolute"]').not('.drawing-container').css({'borderStyle': 'dashed', 'borderColor': '#33cc33'});
         }
+        //}
+
         let containerwidth = document.getElementById('container').offsetWidth;
         let containerheight = document.getElementById('container').offsetHeight;
+        //console.log('Component has been resized! Width =' + containerwidth + 'height' + containerheight);
+
         //reset scaling of pptx2html element to get original size
         $('.pptx2html').css({'transform': '', 'transform-origin': ''});
+
         //Function to fit contents in edit and view component
+        //let pptxwidth = document.getElementByClassName('pptx2html').offsetWidth;
+        //let pptxheight = document.getElementByClassName('pptx2html').offsetHeight;
         let pptxwidth = $('.pptx2html').width();
         let pptxheight = $('.pptx2html').height();
+        //console.log('pptx2html Width =' + pptxwidth + 'height' + pptxheight);
+
         this.scaleratio = containerwidth / pptxwidth;
+
         $('.pptx2html').css({'transform': '', 'transform-origin': ''});
         $('.pptx2html').css({'transform': 'scale('+this.scaleratio+','+this.scaleratio+')', 'transform-origin': 'top left'});
         require('../../../../../custom_modules/simple-draggable/lib/index.js');
-        //remove previous event listeners!
+
+        //TODO: remove previous event listeners!
         SimpleDraggable('.pptx2html [style*="absolute"]', {
             onlyX: false
           , onlyY: false
@@ -286,8 +307,10 @@ class SlideContentEditor extends React.Component {
         //set height of content panel to at least size of pptx2html + (100 pixels * scaleratio).
         this.refs.slideEditPanel.style.height = ((pptxheight + 5 + 20) * this.scaleratio) + 'px';
         this.refs.inlineContent.style.height = ((pptxheight + 0 + 20) * this.scaleratio) + 'px';
+
         //show that content is outside of pptx2html box
         $('.pptx2html').css({'borderStyle': 'none none double none', 'borderColor': '#3366ff', 'box-shadow': '0px 100px 1000px #ff8787'});
+
         //fix bug with speakernotes overlapping soure dialog/other elements - SWIK-832
         $('#inlineSpeakerNotes [style*="absolute"]').css({'position': 'relative', 'zIndex': '0'});
     }
@@ -325,7 +348,7 @@ class SlideContentEditor extends React.Component {
             // maxHeight: 450,
             minHeight: 450,
             overflowY: 'auto',
-            overflowX: 'auto',
+            overflowX: 'hidden',
             //borderStyle: 'dashed',
             //borderColor: '#e7e7e7',
         };
@@ -444,9 +467,10 @@ SlideContentEditor.contextTypes = {
     executeAction: React.PropTypes.func.isRequired
 };
 
-SlideContentEditor = connectToStores(SlideContentEditor, [SlideEditStore, UserProfileStore, DataSourceStore], (context, props) => {
+SlideContentEditor = connectToStores(SlideContentEditor, [SlideEditStore, UserProfileStore, DataSourceStore, SlideViewStore], (context, props) => {
     return {
         SlideEditStore: context.getStore(SlideEditStore).getState(),
+        SlideViewStore: context.getStore(SlideViewStore).getState(),
         UserProfileStore: context.getStore(UserProfileStore).getState(),
         DataSourceStore: context.getStore(DataSourceStore).getState()
     };
