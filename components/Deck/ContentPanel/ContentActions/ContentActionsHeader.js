@@ -1,4 +1,5 @@
 import React from 'react';
+import Modal from 'react-modal';
 import {NavLink, navigateAction} from 'fluxible-router';
 import classNames from 'classnames/bind';
 import {connectToStores} from 'fluxible-addons-react';
@@ -8,14 +9,52 @@ import UserProfileStore from '../../../../stores/UserProfileStore';
 import addTreeNodeAndNavigate from '../../../../actions/decktree/addTreeNodeAndNavigate';
 import deleteTreeNodeAndNavigate from '../../../../actions/decktree/deleteTreeNodeAndNavigate';
 
+const customStyles = {
+    content : {
+        top                   : '50%',
+        left                  : '50%',
+        right                 : 'auto',
+        bottom                : 'auto',
+        marginRight           : '-50%',
+        transform             : 'translate(-50%, -50%)',
+        zIndex                : 15
+    }
+};
+
 class ContentActionsHeader extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            modalIsOpen: false
+        };
+
+        this.openModal = this.openModal.bind(this);
+        this.afterOpenModal = this.afterOpenModal.bind(this);
+        this.closeModal = this.closeModal.bind(this);
+    }
     componentDidUpdate(){
 
+    }
+    openModal() {
+        this.setState({modalIsOpen: true});
+    }
+
+    afterOpenModal() {
+        // references are now sync'd and can be accessed.
+        this.refs.subtitle.style.color = '#f00';
+    }
+
+    closeModal() {
+        this.setState({modalIsOpen: false});
     }
     handleAddNode(selector, nodeSpec) {
         //selector: Object {id: "56", stype: "deck", sid: 67, spath: "67:2"}
         //nodeSec: Object {type: "slide", id: 0}
         this.context.executeAction(addTreeNodeAndNavigate, {selector: selector, nodeSpec: nodeSpec});
+    }
+    handleAnnotate(selector) {
+        console.log('annotate');
+        this.openModal();
     }
     handleDeleteNode(selector) {
         this.context.executeAction(deleteTreeNodeAndNavigate, selector);
@@ -40,6 +79,9 @@ class ContentActionsHeader extends React.Component {
         const addDeckClass = classNames({
             'item ui small basic left attached button': true
         });
+        const annotateClass = classNames({
+            'item ui small basic left attached button': true
+        });
         const duplicateItemClass = classNames({
             'item ui small basic left attached button': true,
             'disabled': contentDetails.selector.id === contentDetails.selector.sid || contentDetails.selector.stype==='deck'
@@ -52,6 +94,25 @@ class ContentActionsHeader extends React.Component {
         let selector = {id: selectorImm.get('id'), stype: selectorImm.get('stype'), sid: selectorImm.get('sid'), spath: selectorImm.get('spath')};
         return (
             <div className="ui top attached tabular menu" role="tablist">
+                <Modal
+                    isOpen={this.state.modalIsOpen}
+                    onAfterOpen={this.afterOpenModal}
+                    onRequestClose={this.closeModal}
+                    style={customStyles}
+                    contentLabel="Example Modal"
+                >
+
+                    <h2 ref="subtitle">Hello</h2>
+                    <button onClick={this.closeModal}>close</button>
+                    <div>I am a modal</div>
+                    <form>
+                        <input />
+                        <button>tab navigation</button>
+                        <button>stays</button>
+                        <button>inside</button>
+                        <button>the modal</button>
+                    </form>
+                </Modal>
                 <NavLink className={'item link' + (contentDetails.mode === 'view' ? ' active' : '')} href={ContentUtil.makeNodeURL(selector, 'view')} role={'tab'}>
                     <i></i>View
                 </NavLink>
@@ -82,6 +143,10 @@ class ContentActionsHeader extends React.Component {
                         </button>
                         <button className={dueleteItemClass} onClick={this.handleDeleteNode.bind(this, selector)} type="button" aria-label="Delete" data-tooltip="Delete">
                             <i className="red large trash icon"></i>
+                        </button>
+
+                        <button className={annotateClass} onClick={this.handleAnnotate.bind(this, selector)} type="button" aria-label="Annotate" data-tooltip="Annotate">
+                            <i className="red large icon"></i>
                         </button>
                         {/*
                         <button className="item ui small basic right attached disabled button">
