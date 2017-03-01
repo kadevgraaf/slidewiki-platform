@@ -8,6 +8,7 @@ import DeckTreeStore from '../../../../stores/DeckTreeStore';
 import UserProfileStore from '../../../../stores/UserProfileStore';
 import addTreeNodeAndNavigate from '../../../../actions/decktree/addTreeNodeAndNavigate';
 import deleteTreeNodeAndNavigate from '../../../../actions/decktree/deleteTreeNodeAndNavigate';
+import AddAnnotation from '../../../Annotation/AddAnnotation';
 
 const customStyles = {
     content : {
@@ -101,17 +102,7 @@ class ContentActionsHeader extends React.Component {
                     style={customStyles}
                     contentLabel="Example Modal"
                 >
-
-                    <h2 ref="subtitle">Hello</h2>
-                    <button onClick={this.closeModal}>close</button>
-                    <div>I am a modal</div>
-                    <form>
-                        <input />
-                        <button>tab navigation</button>
-                        <button>stays</button>
-                        <button>inside</button>
-                        <button>the modal</button>
-                    </form>
+                    <AddAnnotation />
                 </Modal>
                 <NavLink className={'item link' + (contentDetails.mode === 'view' ? ' active' : '')} href={ContentUtil.makeNodeURL(selector, 'view')} role={'tab'}>
                     <i></i>View
