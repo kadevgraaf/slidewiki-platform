@@ -4,7 +4,9 @@ import {connectToStores} from 'fluxible-addons-react';
 import SlideViewStore from '../../../../../stores/SlideViewStore';
 import ResizeAware from 'react-resize-aware';
 import { findDOMNode } from 'react-dom';
+import AnnotationContextMenu from '../../../../Annotation/AnnotationContextMenu';
 const ReactDOM = require('react-dom');
+import { ContextMenu, MenuItem, ContextMenuTrigger, SubMenu } from 'react-contextmenu';
 
 class SlideViewPanel extends React.Component {
     render() {
@@ -29,7 +31,7 @@ class SlideViewPanel extends React.Component {
             overflowY: 'hidden',
             overflowX: 'auto',
             height: '100%'
-        };        
+        };
         const compSpeakerStyle = {
             maxHeight: 50,
             minHeight: 50,
@@ -43,24 +45,27 @@ class SlideViewPanel extends React.Component {
 
 
         return (
-          <div className="ui bottom attached segment">
-              <ResizeAware ref='container' id='container'>
-                  <div ref="slideViewPanel" className="ui" style={compStyle}>
-                      <div className="reveal">
-                          <div className="slides">
-                            <section className="present"  style={sectionElementStyle}>
-                              <div id="inlineContent" dangerouslySetInnerHTML={{__html:this.props.SlideViewStore.content}} />
-                            </section>
-                          </div>
-                          <br />
-                      </div>
-                  </div>
-                  <div ref="slideViewPanelSpeakerNotes" className="ui" style={compSpeakerStyle}>
-                      {this.props.SlideViewStore.speakernotes ? <b>Speaker notes:</b> : ''}
-                      <div dangerouslySetInnerHTML={{__html:this.props.SlideViewStore.speakernotes}} />
-                  </div>
-              </ResizeAware>
-        </div>
+            <div className="ui bottom attached segment">
+                <ResizeAware ref='container' id='container'>
+                    <div ref="slideViewPanel" className="ui" style={compStyle}>
+                        <ContextMenuTrigger id="anno-context-menu">
+                            <div className="reveal">
+                                <div className="slides">
+                                    <section className="present"  style={sectionElementStyle}>
+                                        <div id="inlineContent" dangerouslySetInnerHTML={{__html:this.props.SlideViewStore.content}} />
+                                    </section>
+                                </div>
+                                <br />
+                            </div>
+                        </ContextMenuTrigger>
+                        <AnnotationContextMenu />
+                    </div>
+                    <div ref="slideViewPanelSpeakerNotes" className="ui" style={compSpeakerStyle}>
+                        {this.props.SlideViewStore.speakernotes ? <b>Speaker notes:</b> : ''}
+                        <div dangerouslySetInnerHTML={{__html:this.props.SlideViewStore.speakernotes}} />
+                    </div>
+                </ResizeAware>
+            </div>
         );
     }
     componentDidMount(){

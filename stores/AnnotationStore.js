@@ -29,7 +29,8 @@ class AnnotationStore extends BaseStore {
 
 AnnotationStore.storeName = 'AnnotationStore';
 AnnotationStore.handlers = {
-    'UPDATE_RANGE_SELECTION': 'handleRanges'
+    'UPDATE_RANGE_SELECTION': 'handleRanges',
+    'REMOVE_RANGE_SELECTION': 'handleRanges'
 };
 
 export default AnnotationStore;

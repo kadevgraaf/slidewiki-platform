@@ -5,7 +5,6 @@ import getSelection from './utils/getSelection';
  */
 export default function addTempSelection(context, payload, done) {
     let ranges = getSelection();
-    console.log(ranges);
 
     context.dispatch('UPDATE_RANGE_SELECTION', ranges);
     done();

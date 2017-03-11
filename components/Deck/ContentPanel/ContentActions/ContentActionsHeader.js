@@ -1,5 +1,4 @@
 import React from 'react';
-import Modal from 'react-modal';
 import {NavLink, navigateAction} from 'fluxible-router';
 import classNames from 'classnames/bind';
 import {connectToStores} from 'fluxible-addons-react';
@@ -8,56 +7,15 @@ import DeckTreeStore from '../../../../stores/DeckTreeStore';
 import UserProfileStore from '../../../../stores/UserProfileStore';
 import addTreeNodeAndNavigate from '../../../../actions/decktree/addTreeNodeAndNavigate';
 import deleteTreeNodeAndNavigate from '../../../../actions/decktree/deleteTreeNodeAndNavigate';
-import AddAnnotation from '../../../Annotation/AddAnnotation';
-import AnnotationStore from "../../../../stores/AnnotationStore";
-import addTempSelection from "../../../../actions/annotations/addTempSelection";
-
-const customStyles = {
-    content : {
-        top                   : '50%',
-        left                  : '50%',
-        right                 : 'auto',
-        bottom                : 'auto',
-        marginRight           : '-50%',
-        transform             : 'translate(-50%, -50%)',
-        zIndex                : 15
-    }
-};
 
 class ContentActionsHeader extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            modalIsOpen: false
-        };
-
-        this.openModal = this.openModal.bind(this);
-        this.closeModal = this.closeModal.bind(this);
-    }
     componentDidUpdate(){
 
-    }
-    openModal() {
-        this.context.executeAction(addTempSelection);
-        let {ranges} = this.props.AnnotationStore;
-        if (!ranges || ranges.length) {
-            return;
-        }
-
-        this.setState({modalIsOpen: true});
-    }
-
-    closeModal() {
-        this.setState({modalIsOpen: false});
     }
     handleAddNode(selector, nodeSpec) {
         //selector: Object {id: "56", stype: "deck", sid: 67, spath: "67:2"}
         //nodeSec: Object {type: "slide", id: 0}
         this.context.executeAction(addTreeNodeAndNavigate, {selector: selector, nodeSpec: nodeSpec});
-    }
-    handleAnnotate(selector) {
-        console.log('annotate');
-        this.openModal();
     }
     handleDeleteNode(selector) {
         this.context.executeAction(deleteTreeNodeAndNavigate, selector);
@@ -97,14 +55,6 @@ class ContentActionsHeader extends React.Component {
         let selector = {id: selectorImm.get('id'), stype: selectorImm.get('stype'), sid: selectorImm.get('sid'), spath: selectorImm.get('spath')};
         return (
             <div className="ui top attached tabular menu" role="tablist">
-                <Modal
-                    isOpen={this.state.modalIsOpen}
-                    onRequestClose={this.closeModal}
-                    style={customStyles}
-                    contentLabel="Example Modal"
-                >
-                    <AddAnnotation />
-                </Modal>
                 <NavLink className={'item link' + (contentDetails.mode === 'view' ? ' active' : '')} href={ContentUtil.makeNodeURL(selector, 'view')} role={'tab'}>
                     <i></i>View
                 </NavLink>
@@ -136,10 +86,6 @@ class ContentActionsHeader extends React.Component {
                         <button className={dueleteItemClass} onClick={this.handleDeleteNode.bind(this, selector)} type="button" aria-label="Delete" data-tooltip="Delete">
                             <i className="red large trash icon"></i>
                         </button>
-
-                        <button className={annotateClass} onClick={this.handleAnnotate.bind(this, selector)} type="button" aria-label="Annotate" data-tooltip="Annotate">
-                            <i className="red large icon"></i>
-                        </button>
                         {/*
                         <button className="item ui small basic right attached disabled button">
                             <a className="" title="Settings">
@@ -157,11 +103,10 @@ ContentActionsHeader.contextTypes = {
     executeAction: React.PropTypes.func.isRequired
 };
 //it should listen to decktree store in order to handle adding slides/decks
-ContentActionsHeader = connectToStores(ContentActionsHeader, [DeckTreeStore, UserProfileStore, AnnotationStore], (context, props) => {
+ContentActionsHeader = connectToStores(ContentActionsHeader, [DeckTreeStore, UserProfileStore], (context, props) => {
     return {
         DeckTreeStore: context.getStore(DeckTreeStore).getState(),
-        UserProfileStore: context.getStore(UserProfileStore).getState(),
-        AnnotationStore: context.getStore(AnnotationStore).getState()
+        UserProfileStore: context.getStore(UserProfileStore).getState()
     };
 });
 export default ContentActionsHeader;

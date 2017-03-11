@@ -15,7 +15,7 @@ class AddCommentAnnotation extends React.Component {
             comment: commentText
         });
     }
-    render () {
+    render() {
         return (
             <div className="ui">
                 <form className="ui form upload">
