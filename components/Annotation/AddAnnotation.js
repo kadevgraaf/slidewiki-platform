@@ -15,7 +15,6 @@ export default class AddAnnotation extends React.Component {
     }
     handleChange(e){
         e.preventDefault();
-        console.log(this);
         this.setState({type:e.target.value});
     }
     getAnnotationComponent(type) {

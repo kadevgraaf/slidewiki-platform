@@ -9,6 +9,8 @@ import UserProfileStore from '../../../../stores/UserProfileStore';
 import addTreeNodeAndNavigate from '../../../../actions/decktree/addTreeNodeAndNavigate';
 import deleteTreeNodeAndNavigate from '../../../../actions/decktree/deleteTreeNodeAndNavigate';
 import AddAnnotation from '../../../Annotation/AddAnnotation';
+import AnnotationStore from "../../../../stores/AnnotationStore";
+import addTempSelection from "../../../../actions/annotations/addTempSelection";
 
 const customStyles = {
     content : {
@@ -30,19 +32,19 @@ class ContentActionsHeader extends React.Component {
         };
 
         this.openModal = this.openModal.bind(this);
-        this.afterOpenModal = this.afterOpenModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
     }
     componentDidUpdate(){
 
     }
     openModal() {
-        this.setState({modalIsOpen: true});
-    }
+        this.context.executeAction(addTempSelection);
+        let {ranges} = this.props.AnnotationStore;
+        if (!ranges || ranges.length) {
+            return;
+        }
 
-    afterOpenModal() {
-        // references are now sync'd and can be accessed.
-        this.refs.subtitle.style.color = '#f00';
+        this.setState({modalIsOpen: true});
     }
 
     closeModal() {
@@ -97,7 +99,6 @@ class ContentActionsHeader extends React.Component {
             <div className="ui top attached tabular menu" role="tablist">
                 <Modal
                     isOpen={this.state.modalIsOpen}
-                    onAfterOpen={this.afterOpenModal}
                     onRequestClose={this.closeModal}
                     style={customStyles}
                     contentLabel="Example Modal"
@@ -156,10 +157,11 @@ ContentActionsHeader.contextTypes = {
     executeAction: React.PropTypes.func.isRequired
 };
 //it should listen to decktree store in order to handle adding slides/decks
-ContentActionsHeader = connectToStores(ContentActionsHeader, [DeckTreeStore, UserProfileStore], (context, props) => {
+ContentActionsHeader = connectToStores(ContentActionsHeader, [DeckTreeStore, UserProfileStore, AnnotationStore], (context, props) => {
     return {
         DeckTreeStore: context.getStore(DeckTreeStore).getState(),
-        UserProfileStore: context.getStore(UserProfileStore).getState()
+        UserProfileStore: context.getStore(UserProfileStore).getState(),
+        AnnotationStore: context.getStore(AnnotationStore).getState()
     };
 });
 export default ContentActionsHeader;
