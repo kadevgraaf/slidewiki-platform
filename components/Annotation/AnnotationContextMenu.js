@@ -1,6 +1,6 @@
 import React from 'react';
 import Modal from 'react-modal';
-import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
+import { ContextMenu, MenuItem, ContextMenuTrigger, SubMenu } from "react-contextmenu";
 import AddAnnotation from './AddAnnotation';
 import {connectToStores} from 'fluxible-addons-react';
 import AnnotationStore from "../../stores/AnnotationStore";
@@ -32,8 +32,9 @@ class AnnotationContextMenu extends React.Component {
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
     }
-    handleAnnotate() {
-        console.log('annotate');
+    handleAnnotate(e, data) {
+        e.preventDefault();
+        console.log(data);
         this.openModal();
     }
     updateSelection() {
@@ -44,7 +45,8 @@ class AnnotationContextMenu extends React.Component {
     }
     openModal() {
         let {ranges} = this.props.AnnotationStore;
-        if (!ranges || ranges.length) {
+        console.log(ranges);
+        if (!ranges || !ranges.length) {
             return;
         }
 
@@ -54,10 +56,9 @@ class AnnotationContextMenu extends React.Component {
     closeModal() {
         this.setState({modalIsOpen: false});
     }
-    handleClick(e, data) {
-        console.log(data);
-    }
     render() {
+        let dar = 2;
+
         return (
             <div>
                 <Modal
@@ -68,17 +69,12 @@ class AnnotationContextMenu extends React.Component {
                     <AddAnnotation />
                 </Modal>
                 <ContextMenu id="anno-context-menu"
-                             onShow={this.updateSelection.bind(this)}
-                             onHide={this.removeSelection.bind(this)}>
-                    <MenuItem onClick={this.handleAnnotate.bind(this)}>
-                        Annotate
-                    </MenuItem>
+                             onShow={this.updateSelection.bind(this)}>
+                    <SubMenu title="Add As Entity">
+                        <MenuItem data={{type: 'Person'}} onClick={this.handleAnnotate.bind(this)}>Add Person</MenuItem>
+                    </SubMenu>
                     <MenuItem >
-                        ContextMenu Item 2
-                    </MenuItem>
-                    <MenuItem divider />
-                    <MenuItem >
-                        ContextMenu Item 3
+                        Remove
                     </MenuItem>
                 </ContextMenu>
             </div>

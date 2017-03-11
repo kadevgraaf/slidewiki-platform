@@ -12,7 +12,8 @@ class AddCommentAnnotation extends React.Component {
         if (!commentText) return;
 
         this.context.executeAction(addCommentAnnotation, {
-            comment: commentText
+            comment: commentText,
+            type: 'Person'
         });
     }
     render() {
