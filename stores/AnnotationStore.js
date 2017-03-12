@@ -12,6 +12,7 @@ class AnnotationStore extends BaseStore {
         this.savedSelActiveElement = null;
         this.ranges = [];
         this.annotations = [];
+        this.suggestions = [];
     }
     loadAnnotations() {
         $('.r_entity').hover()
@@ -70,15 +71,32 @@ class AnnotationStore extends BaseStore {
         }});
     }
     getSuggestions(payload) {
+        console.log('init resources');
         let resources = JSON.parse(payload.results)['Resources'];
+        let suggestions = {};
+        for (let resource of resources) {
+            console.log(resource);
+            let suggestion = {};
+            suggestion.uri = resource['@URI'];
+            suggestion.id = suggestion.uri.substring(28);
+            suggestion.tag = suggestion.id.replace(/_/g, " ");
 
+            if (resource['@types']) {
+                suggestion.types = resource['@types'].split(',');
+            }
+            suggestions[suggestion.id] = suggestion;
+        }
+        this.suggestions = Object.keys(suggestions).map(key => { return suggestions[key]; });
+
+        this.emitChange();
     }
     getState() {
         return {
             ranges: this.ranges,
             savedSel: this.savedSel,
             savedSelActiveElement: this.savedSelActiveElement,
-            annotations: this.annotations
+            annotations: this.annotations,
+            suggestions: this.suggestions
         }
     }
     dehydrate() {
@@ -86,7 +104,8 @@ class AnnotationStore extends BaseStore {
             ranges: this.ranges,
             savedSel: this.savedSel,
             savedSelActiveElement: this.savedSelActiveElement,
-            annotations: this.annotations
+            annotations: this.annotations,
+            suggestions: this.suggestions
         };
     }
     rehydrate(state) {
@@ -94,6 +113,7 @@ class AnnotationStore extends BaseStore {
         this.savedSel = state.savedSel;
         this.savedSelActiveElement = state.savedSelActiveElement;
         this.annotations = state.annotations;
+        this.suggestions = state.suggestions;
     }
 }
 

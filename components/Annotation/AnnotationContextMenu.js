@@ -1,6 +1,6 @@
 import React from 'react';
 import Modal from 'react-modal';
-import { ContextMenu, MenuItem, ContextMenuTrigger, SubMenu } from 'react-contextmenu';
+import { ContextMenu, MenuItem, SubMenu } from 'react-contextmenu';
 import AddAnnotation from './AddAnnotation';
 import {connectToStores} from 'fluxible-addons-react';
 import AnnotationStore from '../../stores/AnnotationStore';
@@ -42,6 +42,9 @@ class AnnotationContextMenu extends React.Component {
             text: document.getElementById('inlineContent').innerText
         });
     }
+    addSuggestionAsAnnotation(e, data) {
+        console.log('Add suggestion: ' + data);
+    }
     updateSelection() {
         this.context.executeAction(addTempSelection);
     }
@@ -50,19 +53,30 @@ class AnnotationContextMenu extends React.Component {
     }
     openModal() {
         let {ranges} = this.props.AnnotationStore;
-        console.log(ranges);
         if (!ranges || !ranges.length) {
             return;
         }
 
         this.setState({modalIsOpen: true});
     }
-
     closeModal() {
         this.setState({modalIsOpen: false});
     }
+    initSuggestionItem(suggestions) {
+        if (!suggestions || !suggestions.length) {
+            return <MenuItem onClick={this.getSuggestions.bind(this)}>Get Suggestions</MenuItem>
+        }
+
+        let suggestionSubMenus = suggestions.map(suggestion => {
+            return <MenuItem key={ suggestion.id }
+                             data={suggestion}
+                             onClick={this.addSuggestionAsAnnotation.bind(this)}>{ suggestion.tag }</MenuItem>
+        });
+
+        return <SubMenu title="DBpedia Suggestions">{ suggestionSubMenus }</SubMenu>
+    }
     render() {
-        let dar = 2;
+        let { suggestions } = this.props.AnnotationStore;
 
         return (
             <div>
@@ -79,7 +93,7 @@ class AnnotationContextMenu extends React.Component {
                         <MenuItem data={{type: 'Person'}} onClick={this.handleAnnotate.bind(this)}>Add Person</MenuItem>
                     </SubMenu>
                     <MenuItem>Remove</MenuItem>
-                    <MenuItem onClick={this.getSuggestions.bind(this)}>Get Suggestions</MenuItem>
+                    { this.initSuggestionItem(suggestions) }
                 </ContextMenu>
             </div>
         );
