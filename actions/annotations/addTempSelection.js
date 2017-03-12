@@ -7,5 +7,6 @@ export default function addTempSelection(context, payload, done) {
     let ranges = getSelection();
 
     context.dispatch('UPDATE_RANGE_SELECTION', ranges);
+    context.dispatch('SAVE_SELECTION');
     done();
 }
