@@ -11,6 +11,7 @@ class AnnotationStore extends BaseStore {
         this.savedSel = null;
         this.savedSelActiveElement = null;
         this.ranges = [];
+        this.annotations = [];
     }
     saveSelection() {
         if (this.savedSel) {
@@ -24,9 +25,8 @@ class AnnotationStore extends BaseStore {
     restoreSelection() {
         if (this.savedSel) {
             rangy.restoreSelection(this.savedSel, true);
-            this.savedSel = null;
             window.setTimeout(function() {
-                if (this.savedSelActiveElement && typeof this.savedSelActiveElement.focus != "undefined") {
+                if (this.savedSelActiveElement && typeof this.savedSelActiveElement.focus != 'undefined') {
                     this.savedSelActiveElement.focus();
                 }
             }, 1);
@@ -44,24 +44,31 @@ class AnnotationStore extends BaseStore {
         this.ranges = ranges;
         this.emitChange();
     }
+    saveAnnotation(anno) {
+        this.annotations.push(anno);
+        this.emitChange();
+    }
     getState() {
         return {
             ranges: this.ranges,
             savedSel: this.savedSel,
-            savedSelActiveElement: this.savedSelActiveElement
+            savedSelActiveElement: this.savedSelActiveElement,
+            annotations: this.annotations
         }
     }
     dehydrate() {
         return {
             ranges: this.ranges,
             savedSel: this.savedSel,
-            savedSelActiveElement: this.savedSelActiveElement
+            savedSelActiveElement: this.savedSelActiveElement,
+            annotations: this.annotations
         };
     }
     rehydrate(state) {
         this.ranges = state.ranges;
         this.savedSel = state.savedSel;
         this.savedSelActiveElement = state.savedSelActiveElement;
+        this.annotations = state.annotations;
     }
 }
 
@@ -71,7 +78,8 @@ AnnotationStore.handlers = {
     'RESTORE_SELECTION': 'restoreSelection',
     'REMOVE_SELECTION': 'removeSelection',
     'UPDATE_RANGE_SELECTION': 'handleRanges',
-    'REMOVE_RANGE_SELECTION': 'handleRanges'
+    'REMOVE_RANGE_SELECTION': 'handleRanges',
+    'SAVE_ANNOTATION': 'saveAnnotation'
 };
 
 export default AnnotationStore;

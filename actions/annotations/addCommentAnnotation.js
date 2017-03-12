@@ -2,10 +2,8 @@ import AnnotationStore from "../../stores/AnnotationStore";
 import rangy from 'rangy/lib/rangy-core';
 import 'rangy/lib/rangy-highlighter';
 import 'rangy/lib/rangy-classapplier';
-
-const ENTITY_CLASS = 'r_entity';
-const ENTITY_CLASS_PREFIX = 'r_';
-const SCHEMA_TYPEOF_PREFIX = 'typeof="schema:';
+import 'rangy/lib/rangy-serializer';
+import Annotation from "./classes/Annotation";
 
 /**
  * Created by korovin on 3/11/2017.
@@ -13,24 +11,37 @@ const SCHEMA_TYPEOF_PREFIX = 'typeof="schema:';
 export default function addCommentAnnotation(context, payload, done) {
     let { comment } = payload;
     let { type } = payload;
-    let { ranges } = context.getStore(AnnotationStore).getState();
+    let a = 1;
     context.dispatch('RESTORE_SELECTION');
-    changeWithinTag(ranges[0], type);
+
+    let anno = changeWithinTag(type);
+    console.log(anno);
     context.dispatch('REMOVE_SELECTION');
-    //context.dispatch('NEW_COMMENT_ANNOTATION', payload);
+    context.dispatch('SAVE_ANNOTATION', anno);
     done();
 }
 
-function changeWithinTag(range, type) {
-    let applier = rangy.createClassApplier(ENTITY_CLASS, {
+function changeWithinTag(type) {
+    let savedSel = rangy.getSelection();
+    let annotation = new Annotation(type);
+    let applier = rangy.createClassApplier(annotation.class, {
         elementProperties: {
-            className: ENTITY_CLASS_PREFIX + type.toLowerCase()
+            className: annotation.className
         },
         elementAttributes: {
-            typeof: SCHEMA_TYPEOF_PREFIX + type + '"'
+            typeof: annotation.typeof,
+            anno_id: annotation.id
         }
     });
     let highlighter = rangy.createHighlighter();
     highlighter.addClassApplier(applier);
-    highlighter.highlightSelection(ENTITY_CLASS);
+    highlighter.highlightSelection(annotation.class);
+
+    return {
+        selection: rangy.serializeSelection(savedSel, true, document.getElementById('inlineContent')),
+        type: annotation.type,
+        class: annotation.class,
+        className: annotation.className,
+        id: annotation.id
+    };
 }

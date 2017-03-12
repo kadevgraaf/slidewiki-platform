@@ -1,11 +1,11 @@
 import React from 'react';
 import Modal from 'react-modal';
-import { ContextMenu, MenuItem, ContextMenuTrigger, SubMenu } from "react-contextmenu";
+import { ContextMenu, MenuItem, ContextMenuTrigger, SubMenu } from 'react-contextmenu';
 import AddAnnotation from './AddAnnotation';
 import {connectToStores} from 'fluxible-addons-react';
-import AnnotationStore from "../../stores/AnnotationStore";
-import addTempSelection from "../../actions/annotations/addTempSelection";
-import removeTempSelection from "../../actions/annotations/removeTempSelection";
+import AnnotationStore from '../../stores/AnnotationStore';
+import addTempSelection from '../../actions/annotations/addTempSelection';
+import removeTempSelection from '../../actions/annotations/removeTempSelection';
 
 const customStyles = {
     content : {
