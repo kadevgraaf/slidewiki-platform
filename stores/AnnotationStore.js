@@ -66,11 +66,12 @@ class AnnotationStore extends BaseStore {
             },
             position: {
                 target: 'mouse', // Use the mouse position as the position origin
-                adjust: {
-                    // Don't adjust continuously the mouse, just use initial position
-                    mouse: false
-                }
+                adjust: { x: 5, y: 5 } // Offset it slightly from under the mouse
         }});
+    }
+    getSuggestions(payload) {
+        let resources = JSON.parse(payload.results)['Resources'];
+
     }
     getState() {
         return {
@@ -104,7 +105,8 @@ AnnotationStore.handlers = {
     'UPDATE_RANGE_SELECTION': 'handleRanges',
     'REMOVE_RANGE_SELECTION': 'handleRanges',
     'SAVE_ANNOTATION': 'saveAnnotation',
-    'REMOVE_ANNOTATION': 'removeAnnotation'
+    'REMOVE_ANNOTATION': 'removeAnnotation',
+    'GET_SUGGESTIONS': 'getSuggestions'
 };
 
 export default AnnotationStore;

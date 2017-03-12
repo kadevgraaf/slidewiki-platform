@@ -6,6 +6,7 @@ import {connectToStores} from 'fluxible-addons-react';
 import AnnotationStore from '../../stores/AnnotationStore';
 import addTempSelection from '../../actions/annotations/addTempSelection';
 import removeTempSelection from '../../actions/annotations/removeTempSelection';
+import getSuggestions from '../../actions/annotations/getSuggestions';
 
 const customStyles = {
     content : {
@@ -34,8 +35,12 @@ class AnnotationContextMenu extends React.Component {
     }
     handleAnnotate(e, data) {
         e.preventDefault();
-        console.log(data);
         this.openModal();
+    }
+    getSuggestions(e) {
+        this.context.executeAction(getSuggestions, {
+            text: document.getElementById('inlineContent').innerText
+        });
     }
     updateSelection() {
         this.context.executeAction(addTempSelection);
@@ -73,9 +78,8 @@ class AnnotationContextMenu extends React.Component {
                     <SubMenu title="Add As Entity">
                         <MenuItem data={{type: 'Person'}} onClick={this.handleAnnotate.bind(this)}>Add Person</MenuItem>
                     </SubMenu>
-                    <MenuItem >
-                        Remove
-                    </MenuItem>
+                    <MenuItem>Remove</MenuItem>
+                    <MenuItem onClick={this.getSuggestions.bind(this)}>Get Suggestions</MenuItem>
                 </ContextMenu>
             </div>
         );
