@@ -16,4 +16,4 @@
     border: 1px outset rgba(0, 0, 0, 0.5);
 }
 
-.r_highlight { background-color: yellow; }
+.r_highlight { background-color: yellow !important; }

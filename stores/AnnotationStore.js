@@ -13,6 +13,9 @@ class AnnotationStore extends BaseStore {
         this.ranges = [];
         this.annotations = [];
     }
+    loadAnnotations() {
+        $('.r_entity').hover()
+    }
     saveSelection() {
         if (this.savedSel) {
             rangy.removeMarkers(this.savedSel);
@@ -46,7 +49,28 @@ class AnnotationStore extends BaseStore {
     }
     saveAnnotation(anno) {
         this.annotations.push(anno);
+        this.addOnHover(anno);
         this.emitChange();
+    }
+    addOnHover(anno) {
+        let annotations = $('#inlineContent').find('span[anno_id="' + anno.id + '"]');
+        annotations.mouseover(e => {
+            e.stopPropagation();
+            annotations.addClass('r_highlight');
+        }).mouseout(_ => {
+            annotations.removeClass('r_highlight');
+        }).qtip({
+            content: {
+                title: 'Semantic Annotation',
+                text: 'Type: ' + anno.type
+            },
+            position: {
+                target: 'mouse', // Use the mouse position as the position origin
+                adjust: {
+                    // Don't adjust continuously the mouse, just use initial position
+                    mouse: false
+                }
+        }});
     }
     getState() {
         return {
@@ -79,7 +103,8 @@ AnnotationStore.handlers = {
     'REMOVE_SELECTION': 'removeSelection',
     'UPDATE_RANGE_SELECTION': 'handleRanges',
     'REMOVE_RANGE_SELECTION': 'handleRanges',
-    'SAVE_ANNOTATION': 'saveAnnotation'
+    'SAVE_ANNOTATION': 'saveAnnotation',
+    'REMOVE_ANNOTATION': 'removeAnnotation'
 };
 
 export default AnnotationStore;

@@ -1,9 +1,8 @@
-import AnnotationStore from "../../stores/AnnotationStore";
 import rangy from 'rangy/lib/rangy-core';
 import 'rangy/lib/rangy-highlighter';
 import 'rangy/lib/rangy-classapplier';
 import 'rangy/lib/rangy-serializer';
-import Annotation from "./classes/Annotation";
+import Annotation from './classes/Annotation';
 
 /**
  * Created by korovin on 3/11/2017.
@@ -11,7 +10,6 @@ import Annotation from "./classes/Annotation";
 export default function addCommentAnnotation(context, payload, done) {
     let { comment } = payload;
     let { type } = payload;
-    let a = 1;
     context.dispatch('RESTORE_SELECTION');
 
     let anno = changeWithinTag(type);

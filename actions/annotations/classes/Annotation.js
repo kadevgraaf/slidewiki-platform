@@ -10,7 +10,7 @@ const SCHEMA_TYPEOF_PREFIX = 'typeof="schema:';
 export default class Annotation {
     constructor(type) {
         this.className = ENTITY_CLASS_PREFIX + type.toLowerCase();
-        this.id = shortid.generate();
+        this.id = ENTITY_CLASS_PREFIX + shortid.generate();
         this.typeof = SCHEMA_TYPEOF_PREFIX + type + '"';
         this.class = ENTITY_CLASS;
         this.type = type;
