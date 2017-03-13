@@ -73,6 +73,7 @@ class AnnotationStore extends BaseStore {
     getSuggestions(payload) {
         console.log('init resources');
         let resources = JSON.parse(payload.results)['Resources'];
+        console.log(resources);
         let suggestions = {};
         for (let resource of resources) {
             console.log(resource);
@@ -80,6 +81,7 @@ class AnnotationStore extends BaseStore {
             suggestion.uri = resource['@URI'];
             suggestion.id = suggestion.uri.substring(28);
             suggestion.tag = suggestion.id.replace(/_/g, " ");
+            suggestion.surface = resource['@surfaceForm'];
 
             if (resource['@types']) {
                 suggestion.types = resource['@types'].split(',');

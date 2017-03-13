@@ -7,6 +7,7 @@ import AnnotationStore from '../../stores/AnnotationStore';
 import addTempSelection from '../../actions/annotations/addTempSelection';
 import removeTempSelection from '../../actions/annotations/removeTempSelection';
 import getSuggestions from '../../actions/annotations/getSuggestions';
+import applyAnnotationSuggestions from "../../actions/annotations/applyAnnotationSuggestions";
 
 const customStyles = {
     content : {
@@ -71,6 +72,10 @@ class AnnotationContextMenu extends React.Component {
             return <MenuItem key={ suggestion.id }
                              data={suggestion}
                              onClick={this.addSuggestionAsAnnotation.bind(this)}>{ suggestion.tag }</MenuItem>
+        });
+
+        this.context.executeAction(applyAnnotationSuggestions, {
+            suggestions: suggestions
         });
 
         return <SubMenu title="DBpedia Suggestions">{ suggestionSubMenus }</SubMenu>
