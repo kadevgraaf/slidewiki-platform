@@ -64,21 +64,24 @@ class AnnotationContextMenu extends React.Component {
         this.setState({modalIsOpen: false});
     }
     initSuggestionItem(suggestions) {
-        if (!suggestions || !suggestions.length) {
-            return <MenuItem onClick={this.getSuggestions.bind(this)}>Get Suggestions</MenuItem>
+        if (suggestions && suggestions.length) {
+            this.context.executeAction(applyAnnotationSuggestions, {
+                suggestions: suggestions
+            });
         }
+        return <MenuItem onClick={this.getSuggestions.bind(this)}>Get Suggestions</MenuItem>
 
-        let suggestionSubMenus = suggestions.map(suggestion => {
-            return <MenuItem key={ suggestion.id }
-                             data={suggestion}
-                             onClick={this.addSuggestionAsAnnotation.bind(this)}>{ suggestion.tag }</MenuItem>
-        });
-
-        this.context.executeAction(applyAnnotationSuggestions, {
-            suggestions: suggestions
-        });
-
-        return <SubMenu title="DBpedia Suggestions">{ suggestionSubMenus }</SubMenu>
+        // let suggestionSubMenus = suggestions.map(suggestion => {
+        //     return <MenuItem key={ suggestion.id }
+        //                      data={suggestion}
+        //                      onClick={this.addSuggestionAsAnnotation.bind(this)}>{ suggestion.tag }</MenuItem>
+        // });
+        //
+        // this.context.executeAction(applyAnnotationSuggestions, {
+        //     suggestions: suggestions
+        // });
+        //
+        // return <SubMenu title="DBpedia Suggestions">{ suggestionSubMenus }</SubMenu>
     }
     render() {
         let { suggestions } = this.props.AnnotationStore;

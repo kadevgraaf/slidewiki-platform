@@ -11,28 +11,29 @@ export default function applyAnnotationSuggestions(context, payload, done) {
 
     if (!suggestions.length) return;
 
+    let nodeContentHtml = $('#inlineContent').find('> div')[0];
     let searchScopeRange = rangy.createRange();
     let range = rangy.createRange();
     let searchResultApplier = rangy.createClassApplier("r_highlight");
-    let searchOptions = {
-        caseSensitive: false,
-        wholeWordsOnly: true
-    };
+    let highlighter = rangy.createHighlighter();
 
-    let nodeContentHtml = document.getElementById('inlineContent');
-
+    searchScopeRange.selectNodeContents(nodeContentHtml);
     range.selectNodeContents(nodeContentHtml);
+    highlighter.addClassApplier(searchResultApplier);
     searchResultApplier.undoToRange(range);
 
+    let searchOptions = {
+        caseSensitive: false,
+        wholeWordsOnly: false,
+        withinRange: searchScopeRange
+    };
+    
     for (let suggestion of suggestions) {
         const surface = suggestion.surface;
-        if (surface === '') return;
-        console.log(surface);
-        let i = 0;
-        while (range.findText(surface, searchOptions) && i <= 1000) {
+        if (surface === '') continue;
+        if (range.findText(surface, searchOptions)) {
             searchResultApplier.applyToRange(range);
             range.collapse(false);
-            i++;
         }
     }
 

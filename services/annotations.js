@@ -10,9 +10,11 @@ export default {
         if (!params.text) {
             callback(null, {success: false, results: {}});
         }
-        let url = 'http://api.dbpedia-spotlight.org/annotate?text=';
-        url = url + encodeURI(params.text);
 
+        console.log(params.text);
+        let url = 'http://spotlight.sztaki.hu:2222/rest/annotate?text=';
+        url = url + encodeURI(params.text) + '&confidence=0.2&support=20';
+        let a = 1;
         rp.post({
             uri: url,
             headers: {

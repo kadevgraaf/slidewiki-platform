@@ -72,6 +72,12 @@ class AnnotationStore extends BaseStore {
     }
     getSuggestions(payload) {
         console.log('init resources');
+        
+        if (!payload || !payload.results || (Object.keys(payload.results).length === 0)) {
+            alert('Could not suggest anything');
+            return;
+        }
+
         let resources = JSON.parse(payload.results)['Resources'];
         console.log(resources);
         let suggestions = {};
@@ -89,7 +95,7 @@ class AnnotationStore extends BaseStore {
             suggestions[suggestion.id] = suggestion;
         }
         this.suggestions = Object.keys(suggestions).map(key => { return suggestions[key]; });
-
+        
         this.emitChange();
     }
     getState() {
