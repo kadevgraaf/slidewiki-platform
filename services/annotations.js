@@ -20,7 +20,7 @@ function processSuggestions(params, callback) {
     if (!params.text) {
         callback(null, {success: false, results: {}});
     }
-    
+
     let url = 'http://spotlight.sztaki.hu:2222/rest/annotate?text=';
     url = url + encodeURI(params.text) + '&confidence=0.4&support=20';
 
