@@ -72,7 +72,7 @@ class AnnotationStore extends BaseStore {
     }
     getSuggestions(payload) {
         console.log('init resources');
-        
+
         if (!payload || !payload.results || (Object.keys(payload.results).length === 0)) {
             alert('Could not suggest anything');
             return;
@@ -95,8 +95,11 @@ class AnnotationStore extends BaseStore {
             suggestions[suggestion.id] = suggestion;
         }
         this.suggestions = Object.keys(suggestions).map(key => { return suggestions[key]; });
-        
+
         this.emitChange();
+    }
+    getWikipediaLinks(links) {
+        console.log(links);
     }
     getState() {
         return {
@@ -134,7 +137,8 @@ AnnotationStore.handlers = {
     'REMOVE_RANGE_SELECTION': 'handleRanges',
     'SAVE_ANNOTATION': 'saveAnnotation',
     'REMOVE_ANNOTATION': 'removeAnnotation',
-    'GET_SUGGESTIONS': 'getSuggestions'
+    'GET_SUGGESTIONS': 'getSuggestions',
+    'GET_WIKIPEDIA_LINKS': 'getWikipediaLinks'
 };
 
 export default AnnotationStore;

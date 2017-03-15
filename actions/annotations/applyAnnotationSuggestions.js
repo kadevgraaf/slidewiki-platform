@@ -2,6 +2,7 @@ import rangy from 'rangy/lib/rangy-core';
 import 'rangy/lib/rangy-highlighter';
 import 'rangy/lib/rangy-classapplier';
 import 'rangy/lib/rangy-textrange';
+import getWikipediaLinks from "./getWikipediaLinks";
 
 /**
  * Created by korovin on 3/13/2017.
@@ -27,7 +28,7 @@ export default function applyAnnotationSuggestions(context, payload, done) {
         wholeWordsOnly: false,
         withinRange: searchScopeRange
     };
-    
+
     for (let suggestion of suggestions) {
         const surface = suggestion.surface;
         if (surface === '') continue;
@@ -36,6 +37,10 @@ export default function applyAnnotationSuggestions(context, payload, done) {
             range.collapse(false);
         }
     }
+
+    context.executeAction(getWikipediaLinks, {
+        suggestions: suggestions
+    });
 
     done();
 }
