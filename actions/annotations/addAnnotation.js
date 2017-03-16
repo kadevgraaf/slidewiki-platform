@@ -4,36 +4,47 @@ import 'rangy/lib/rangy-classapplier';
 import 'rangy/lib/rangy-serializer';
 import Annotation from './classes/Annotation';
 
+const PROPERTY_CLASS = 'r_prop';
+const BASE_PROPERTY_CLASS = 'r_name';
+const BASE_PROPERTY_TYPE = 'schema:name';
+
 /**
  * Created by korovin on 3/11/2017.
  */
-export default function addCommentAnnotation(context, payload, done) {
-    let { comment } = payload;
-    let { type } = payload;
+export default function addAnnotation(context, payload, done) {
+    let { name, type, uri } = payload;
     context.dispatch('RESTORE_SELECTION');
 
-    let anno = changeWithinTag(type);
+    let anno = changeWithinTag(name, type, uri);
     console.log(anno);
     context.dispatch('REMOVE_SELECTION');
     context.dispatch('SAVE_ANNOTATION', anno);
     done();
 }
 
-function changeWithinTag(type) {
+function changeWithinTag(name, type, uri) {
     let savedSel = rangy.getSelection();
-    let annotation = new Annotation(type);
+    let annotation = new Annotation(uri, type);
     let applier = rangy.createClassApplier(annotation.class, {
         elementProperties: {
             className: annotation.className
         },
         elementAttributes: {
             typeof: annotation.typeof,
-            anno_id: annotation.id
+            'data-id': annotation.id
         }
     });
+
     let highlighter = rangy.createHighlighter();
     highlighter.addClassApplier(applier);
     highlighter.highlightSelection(annotation.class);
+
+    $('#inlineContent').find(`[data-id="${annotation.id}"]`).each(function(index) {
+        let text = $(this).text();
+        let htmlWrapper = annotation.toHtml(text);
+        $(this).empty();
+        $(this).wrapInner(htmlWrapper);
+    });
 
     return {
         selection: rangy.serializeSelection(savedSel, true, document.getElementById('inlineContent')),

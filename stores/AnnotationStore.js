@@ -60,7 +60,7 @@ class AnnotationStore extends BaseStore {
         this.emitChange();
     }
     addOnHover(anno) {
-        let annotations = $('#inlineContent').find('span[anno_id="' + anno.id + '"]');
+        let annotations = $('#inlineContent').find('span[data-id="' + anno.id + '"]');
         annotations.mouseover(e => {
             e.stopPropagation();
             annotations.addClass('r_highlight');

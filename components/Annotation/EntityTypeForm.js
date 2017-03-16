@@ -3,7 +3,7 @@ import AnnotationStore from '../../stores/AnnotationStore';
 import {connectToStores} from 'fluxible-addons-react';
 import getUriSuggestions from "../../actions/annotations/getUriSuggestions";
 import removeUriSuggestions from "../../actions/annotations/removeUriSuggestions";
-
+import addAnnotation from "../../actions/annotations/addAnnotation";
 
 const EDIT_BUTTON_MODE = 'edit';
 const ADD_BUTTON_MODE = 'add';
@@ -23,7 +23,17 @@ class EntityTypeForm extends React.Component {
     }
     onAddAnnotation(e) {
         e.preventDefault();
-        console.log('add annotation');
+
+        let { selectedText } = this.props.AnnotationStore;
+        if (!selectedText || !this.state.type) {
+            return;
+        }
+
+        this.context.executeAction(addAnnotation, {
+            name: selectedText,
+            type: this.state.type,
+            uri: this.state.uri
+        });
     }
     onAddSuggestions(e) {
         e.preventDefault();
@@ -31,10 +41,11 @@ class EntityTypeForm extends React.Component {
         if (!selectedText || !this.state.type) {
             return;
         }
+        this.context.executeAction(removeUriSuggestions);
 
         this.context.executeAction(getUriSuggestions, {
-            'keyword': selectedText,
-            'type': this.state.type
+            keyword: selectedText,
+            type: this.state.type
         });
     }
     onEditAnnotation(e) {

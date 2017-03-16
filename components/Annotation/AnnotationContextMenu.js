@@ -7,6 +7,7 @@ import addTempSelection from '../../actions/annotations/addTempSelection';
 import removeTempSelection from '../../actions/annotations/removeTempSelection';
 import getSuggestions from '../../actions/annotations/getSuggestions';
 import applyAnnotationSuggestions from "../../actions/annotations/applyAnnotationSuggestions";
+import removeUriSuggestions from "../../actions/annotations/removeUriSuggestions";
 import EntityTypeForm from './EntityTypeForm';
 
 const customStyles = {
@@ -39,6 +40,7 @@ class AnnotationContextMenu extends React.Component {
     handleAnnotate(e, data) {
         e.preventDefault();
         this.setState({type: data.type});
+        this.context.executeAction(removeUriSuggestions);
         this.openModal();
     }
     getSuggestions(e) {
