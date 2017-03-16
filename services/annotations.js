@@ -68,7 +68,7 @@ function getDbpediaAnnotations(params, callback) {
         return;
     }
 
-    let url = SPOTLIGHT_BASE_URL + encodeURI(params.text) + '&confidence=0.4&support=20';
+    let url = SPOTLIGHT_BASE_URL + encodeURI(params.text) + '&confidence=0.4&support=20&types=' + encodeURI(params.types);
 
     rp.post({
         uri: url,

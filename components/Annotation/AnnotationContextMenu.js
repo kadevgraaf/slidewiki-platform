@@ -44,8 +44,12 @@ class AnnotationContextMenu extends React.Component {
         this.openModal();
     }
     getSuggestions(e) {
+        let { types } = this.props.AnnotationStore;
+        let typeList = types.map(type => 'Schema:' + type).join(',');
+
         this.context.executeAction(getSuggestions, {
-            text: document.getElementById('inlineContent').innerText
+            text: document.getElementById('inlineContent').innerText,
+            types: typeList
         });
     }
     updateSelection() {
@@ -55,7 +59,6 @@ class AnnotationContextMenu extends React.Component {
         this.context.executeAction(removeTempSelection);
     }
     openModal() {
-        console.log('Open modal');
         let {ranges} = this.props.AnnotationStore;
         if (!ranges || !ranges.length) {
             alert('Please select text');

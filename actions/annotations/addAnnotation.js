@@ -4,25 +4,20 @@ import 'rangy/lib/rangy-classapplier';
 import 'rangy/lib/rangy-serializer';
 import Annotation from './classes/Annotation';
 
-const PROPERTY_CLASS = 'r_prop';
-const BASE_PROPERTY_CLASS = 'r_name';
-const BASE_PROPERTY_TYPE = 'schema:name';
-
 /**
  * Created by korovin on 3/11/2017.
  */
 export default function addAnnotation(context, payload, done) {
-    let { name, type, uri } = payload;
+    let { type, uri } = payload;
     context.dispatch('RESTORE_SELECTION');
 
-    let anno = changeWithinTag(name, type, uri);
-    console.log(anno);
+    let anno = changeWithinTag(type, uri);
     context.dispatch('REMOVE_SELECTION');
     context.dispatch('SAVE_ANNOTATION', anno);
     done();
 }
 
-function changeWithinTag(name, type, uri) {
+function changeWithinTag(type, uri) {
     let savedSel = rangy.getSelection();
     let annotation = new Annotation(uri, type);
     let applier = rangy.createClassApplier(annotation.class, {

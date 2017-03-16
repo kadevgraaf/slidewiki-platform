@@ -2,6 +2,7 @@ import BaseStore from 'fluxible/addons/BaseStore';
 import rangy from 'rangy/lib/rangy-core';
 import 'rangy/lib/rangy-selectionsaverestore';
 const DEFAULT_OPTION = 'Person';
+const TYPE_REGEX = /Schema:(Place|Organization|Person|CreativeWork|Product)/;
 
 /**
  * Created by korovin on 3/11/2017.
@@ -15,7 +16,7 @@ class AnnotationStore extends BaseStore {
         this.ranges = [];
         this.annotations = [];
         this.suggestions = [];
-        this.types = ['Organization', DEFAULT_OPTION, 'Place'];
+        this.types = ['Organization', DEFAULT_OPTION, 'Place', 'CreativeWork', 'Product'];
         this.uriSuggestions = [];
     }
     loadAnnotations() {
@@ -85,7 +86,6 @@ class AnnotationStore extends BaseStore {
         let resources = JSON.parse(payload.results)['Resources'];
         let suggestions = {};
         for (let resource of resources) {
-            console.log(resource);
             let suggestion = {};
             suggestion.uri = resource['@URI'];
             suggestion.id = suggestion.uri.substring(28);
@@ -96,6 +96,7 @@ class AnnotationStore extends BaseStore {
                 suggestion.types = resource['@types'].split(',');
             }
             suggestions[suggestion.id] = suggestion;
+            suggestion.type = resource['@types'].match(TYPE_REGEX)[1];
         }
         this.suggestions = Object.keys(suggestions).map(key => { return suggestions[key]; });
 

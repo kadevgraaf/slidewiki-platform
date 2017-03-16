@@ -91,8 +91,7 @@ class EntityTypeForm extends React.Component {
             let html = uriSuggestions.map(suggestion => {
                 return (<option value={ suggestion } key={ suggestion } title={ suggestion }>{ suggestion }</option>)
             });
-
-            // $(this.refs.uriDropdown).val(uriSuggestions[0]);
+            
             return html;
         }
     }
