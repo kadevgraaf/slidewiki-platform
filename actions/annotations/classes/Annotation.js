@@ -14,7 +14,7 @@ export default class Annotation {
     constructor(uri, type) {
         this.className = ENTITY_CLASS_PREFIX + type.toLowerCase();
         this.id = ENTITY_CLASS_PREFIX + shortid.generate();
-        this.typeof = SCHEMA_TYPEOF_PREFIX + type + '"';
+        this.typeof = SCHEMA_TYPEOF_PREFIX + type;
         this.class = ENTITY_CLASS;
         this.type = type;
         this.uri = uri;
