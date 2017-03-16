@@ -7,7 +7,6 @@ import addAnnotation from "../../actions/annotations/addAnnotation";
 
 const EDIT_BUTTON_MODE = 'edit';
 const ADD_BUTTON_MODE = 'add';
-const DEFAULT_OPTION = 'Person';
 
 /**
  * Created by korovin on 3/16/2017.
@@ -32,8 +31,9 @@ class EntityTypeForm extends React.Component {
         this.context.executeAction(addAnnotation, {
             name: selectedText,
             type: this.state.type,
-            uri: this.state.uri
+            uri: $(this.refs.uriDropdown).val()
         });
+        this.props.onClose();
     }
     onAddSuggestions(e) {
         e.preventDefault();
@@ -57,7 +57,10 @@ class EntityTypeForm extends React.Component {
     }
     handleChangeUri(e) {
         e.preventDefault(e);
-        this.setState({uri: e.target.value});
+        this.changeUri(e.target.value);
+    }
+    changeUri(value) {
+        this.setState({uri: value});
     }
     getButton(mode) {
         if (mode === EDIT_BUTTON_MODE) {
@@ -85,9 +88,12 @@ class EntityTypeForm extends React.Component {
     getUriSuggestionDropdown() {
         let { uriSuggestions } = this.props.AnnotationStore;
         if (uriSuggestions && uriSuggestions.length) {
-            return uriSuggestions.map(suggestion => {
+            let html = uriSuggestions.map(suggestion => {
                 return (<option value={ suggestion } key={ suggestion } title={ suggestion }>{ suggestion }</option>)
             });
+
+            // $(this.refs.uriDropdown).val(uriSuggestions[0]);
+            return html;
         }
     }
     onCancel(e) {
@@ -106,7 +112,7 @@ class EntityTypeForm extends React.Component {
                                     <label htmlFor="">Entity URI</label>
                                 <div className="ui grid">
                                     <div className="ten wide column">
-                                        <select className="ui search dropdown" value={ this.state.uri } onChange={ this.handleChangeUri.bind(this) }>
+                                        <select ref="uriDropdown" className="ui search dropdown" value={ this.state.uri } onChange={ this.handleChangeUri.bind(this) }>
                                             { this.getUriSuggestionDropdown() }
                                         </select>
                                     </div>

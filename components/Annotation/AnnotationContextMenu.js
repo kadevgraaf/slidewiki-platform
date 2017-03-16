@@ -48,9 +48,6 @@ class AnnotationContextMenu extends React.Component {
             text: document.getElementById('inlineContent').innerText
         });
     }
-    addSuggestionAsAnnotation(e, data) {
-        console.log('Add suggestion: ' + data);
-    }
     updateSelection() {
         this.context.executeAction(addTempSelection);
     }

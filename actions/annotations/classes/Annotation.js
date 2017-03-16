@@ -2,7 +2,7 @@ import shortid from 'shortid';
 
 const ENTITY_CLASS = 'r_entity';
 const ENTITY_CLASS_PREFIX = 'r_';
-const SCHEMA_TYPEOF_PREFIX = 'typeof="schema:';
+const SCHEMA_TYPEOF_PREFIX = 'schema:';
 const PROPERTY_CLASS = 'r_prop';
 const BASE_PROPERTY_CLASS = 'r_name';
 const BASE_PROPERTY_TYPE = 'schema:name';
@@ -21,7 +21,6 @@ export default class Annotation {
     }
 
     toHtml(text) {
-        // return `<span class="${ENTITY_CLASS} ${this.className}" resource="1111" typeof="schema:${this.type}" data-id="${this.id}">${text}</span>`;
         return `<span class="${PROPERTY_CLASS} ${BASE_PROPERTY_CLASS}" property="schema:name">${text}</span>`;
     }
 }

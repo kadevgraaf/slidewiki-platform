@@ -31,7 +31,8 @@ function changeWithinTag(name, type, uri) {
         },
         elementAttributes: {
             typeof: annotation.typeof,
-            'data-id': annotation.id
+            'data-id': annotation.id,
+            resource: uri
         }
     });
 
