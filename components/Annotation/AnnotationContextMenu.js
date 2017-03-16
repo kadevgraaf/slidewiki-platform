@@ -1,13 +1,13 @@
 import React from 'react';
 import Modal from 'react-modal';
 import { ContextMenu, MenuItem, SubMenu } from 'react-contextmenu';
-import AddAnnotation from './AddAnnotation';
-import {connectToStores} from 'fluxible-addons-react';
+import { connectToStores } from 'fluxible-addons-react';
 import AnnotationStore from '../../stores/AnnotationStore';
 import addTempSelection from '../../actions/annotations/addTempSelection';
 import removeTempSelection from '../../actions/annotations/removeTempSelection';
 import getSuggestions from '../../actions/annotations/getSuggestions';
 import applyAnnotationSuggestions from "../../actions/annotations/applyAnnotationSuggestions";
+import EntityTypeForm from './EntityTypeForm';
 
 const customStyles = {
     content : {
@@ -17,7 +17,8 @@ const customStyles = {
         bottom                : 'auto',
         marginRight           : '-50%',
         transform             : 'translate(-50%, -50%)',
-        zIndex                : 15
+        zIndex                : 15,
+        width                 : '200px'
     }
 };
 
@@ -53,8 +54,10 @@ class AnnotationContextMenu extends React.Component {
         this.context.executeAction(removeTempSelection);
     }
     openModal() {
+        console.log('Open modal');
         let {ranges} = this.props.AnnotationStore;
         if (!ranges || !ranges.length) {
+            alert('Please select text');
             return;
         }
 
@@ -70,35 +73,28 @@ class AnnotationContextMenu extends React.Component {
             });
         }
         return <MenuItem onClick={this.getSuggestions.bind(this)}>Get Suggestions</MenuItem>
-
-        // let suggestionSubMenus = suggestions.map(suggestion => {
-        //     return <MenuItem key={ suggestion.id }
-        //                      data={suggestion}
-        //                      onClick={this.addSuggestionAsAnnotation.bind(this)}>{ suggestion.tag }</MenuItem>
-        // });
-        //
-        // this.context.executeAction(applyAnnotationSuggestions, {
-        //     suggestions: suggestions
-        // });
-        //
-        // return <SubMenu title="DBpedia Suggestions">{ suggestionSubMenus }</SubMenu>
+    }
+    getTypeItems(types) {
+        return types.map(type => {
+            return <MenuItem data={ {type: type} } key={ type } onClick={this.handleAnnotate.bind(this)}>Add { type }</MenuItem>
+        });
     }
     render() {
-        let { suggestions } = this.props.AnnotationStore;
+        let { suggestions, types } = this.props.AnnotationStore;
 
         return (
             <div>
                 <Modal
-                    isOpen={this.state.modalIsOpen}
-                    onRequestClose={this.closeModal}
-                    style={customStyles}
-                    contentLabel="Example Modal">
-                    <AddAnnotation />
+                    isOpen={ this.state.modalIsOpen }
+                    onRequestClose={ this.closeModal }
+                    style={ customStyles }
+                    contentLabel="Add Entity">
+                    <EntityTypeForm />
                 </Modal>
                 <ContextMenu id="anno-context-menu"
-                             onShow={this.updateSelection.bind(this)}>
+                             onShow={ this.updateSelection.bind(this) }>
                     <SubMenu title="Add As Entity">
-                        <MenuItem data={{type: 'Person'}} onClick={this.handleAnnotate.bind(this)}>Add Person</MenuItem>
+                        { this.getTypeItems(types) }
                     </SubMenu>
                     <MenuItem>Remove</MenuItem>
                     { this.initSuggestionItem(suggestions) }

@@ -1,6 +1,7 @@
 import BaseStore from 'fluxible/addons/BaseStore';
 import rangy from 'rangy/lib/rangy-core';
 import 'rangy/lib/rangy-selectionsaverestore';
+const DEFAULT_OPTION = 'Person';
 
 /**
  * Created by korovin on 3/11/2017.
@@ -13,6 +14,7 @@ class AnnotationStore extends BaseStore {
         this.ranges = [];
         this.annotations = [];
         this.suggestions = [];
+        this.types = ['Organization', DEFAULT_OPTION, 'Place'];
     }
     loadAnnotations() {
         $('.r_entity').hover()
@@ -107,7 +109,8 @@ class AnnotationStore extends BaseStore {
             savedSel: this.savedSel,
             savedSelActiveElement: this.savedSelActiveElement,
             annotations: this.annotations,
-            suggestions: this.suggestions
+            suggestions: this.suggestions,
+            types: this.types
         }
     }
     dehydrate() {
@@ -116,7 +119,8 @@ class AnnotationStore extends BaseStore {
             savedSel: this.savedSel,
             savedSelActiveElement: this.savedSelActiveElement,
             annotations: this.annotations,
-            suggestions: this.suggestions
+            suggestions: this.suggestions,
+            types: this.types
         };
     }
     rehydrate(state) {
@@ -125,6 +129,7 @@ class AnnotationStore extends BaseStore {
         this.savedSelActiveElement = state.savedSelActiveElement;
         this.annotations = state.annotations;
         this.suggestions = state.suggestions;
+        this.types = state.types;
     }
 }
 
