@@ -11,10 +11,12 @@ class AnnotationStore extends BaseStore {
         super(dispatcher);
         this.savedSel = null;
         this.savedSelActiveElement = null;
+        this.selectedText = '';
         this.ranges = [];
         this.annotations = [];
         this.suggestions = [];
         this.types = ['Organization', DEFAULT_OPTION, 'Place'];
+        this.uriSuggestions = [];
     }
     loadAnnotations() {
         $('.r_entity').hover()
@@ -23,6 +25,7 @@ class AnnotationStore extends BaseStore {
         if (this.savedSel) {
             rangy.removeMarkers(this.savedSel);
         }
+        this.selectedText = rangy.getSelection().toString().replace(/(\r\n|\n|\r)/gm," ");
         this.savedSel = rangy.saveSelection();
         this.savedSelActiveElement = document.activeElement;
 
@@ -43,6 +46,7 @@ class AnnotationStore extends BaseStore {
         if (this.savedSel) {
             rangy.removeMarkers(this.savedSel);
             this.savedSel = null;
+            this.selectedText = '';
         }
         this.emitChange();
     }
@@ -73,15 +77,12 @@ class AnnotationStore extends BaseStore {
         }});
     }
     getSuggestions(payload) {
-        console.log('init resources');
-
         if (!payload || !payload.results || (Object.keys(payload.results).length === 0)) {
             alert('Could not suggest anything');
             return;
         }
 
         let resources = JSON.parse(payload.results)['Resources'];
-        console.log(resources);
         let suggestions = {};
         for (let resource of resources) {
             console.log(resource);
@@ -100,6 +101,17 @@ class AnnotationStore extends BaseStore {
 
         this.emitChange();
     }
+    getUriSuggestions(res) {
+        this.uriSuggestions = res.results.map(result => {
+            return result.uri;
+        });
+
+        this.emitChange();
+    }
+    removeUriSuggestions() {
+        this.uriSuggestions = [];
+        this.emitChange();
+    }
     getWikipediaLinks(links) {
         console.log(links);
     }
@@ -110,7 +122,9 @@ class AnnotationStore extends BaseStore {
             savedSelActiveElement: this.savedSelActiveElement,
             annotations: this.annotations,
             suggestions: this.suggestions,
-            types: this.types
+            types: this.types,
+            selectedText: this.selectedText,
+            uriSuggestions: this.uriSuggestions
         }
     }
     dehydrate() {
@@ -120,7 +134,9 @@ class AnnotationStore extends BaseStore {
             savedSelActiveElement: this.savedSelActiveElement,
             annotations: this.annotations,
             suggestions: this.suggestions,
-            types: this.types
+            types: this.types,
+            selectedText: this.selectedText,
+            uriSuggestions: this.uriSuggestions
         };
     }
     rehydrate(state) {
@@ -130,6 +146,8 @@ class AnnotationStore extends BaseStore {
         this.annotations = state.annotations;
         this.suggestions = state.suggestions;
         this.types = state.types;
+        this.selectedText = state.selectedText;
+        this.uriSuggestions = state.uriSuggestions;
     }
 }
 
@@ -143,7 +161,9 @@ AnnotationStore.handlers = {
     'SAVE_ANNOTATION': 'saveAnnotation',
     'REMOVE_ANNOTATION': 'removeAnnotation',
     'GET_SUGGESTIONS': 'getSuggestions',
-    'GET_WIKIPEDIA_LINKS': 'getWikipediaLinks'
+    'GET_WIKIPEDIA_LINKS': 'getWikipediaLinks',
+    'GET_URI_SUGGESTIONS': 'getUriSuggestions',
+    'REMOVE_URI_SUGGESTIONS': 'removeUriSuggestions'
 };
 
 export default AnnotationStore;

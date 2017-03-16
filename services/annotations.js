@@ -9,6 +9,8 @@ SELECT ?subj ?link WHERE
     FILTER(?subj IN (`;
 
 const SPOTLIGHT_BASE_URL = 'http://spotlight.sztaki.hu:2222/rest/annotate?text=';
+const MAX_HITS = 5;
+const DBPEDIA_LOOKUP_BASE_URL = 'http://lookup.dbpedia.org/api/search.asmx/KeywordSearch?QueryString=';
 const DBPEDIA_VIRTUOSO_BASE_URL = 'http://dbpedia.org/sparql';
 const DBPEDIA_RESOURCE_PREFIX = 'dbo:';
 
@@ -17,20 +19,53 @@ const DBPEDIA_RESOURCE_PREFIX = 'dbo:';
  */
 export default {
     name: 'annotations',
-    // At least one of the CRUD methods is Required
     read: (req, resource, params, config, callback) => {
-
-        if (resource === 'annotations.suggestions') {
-            processSuggestions(params, callback);
-        } else if (resource === 'annotations.wikipedia') {
-            getWikipediaLinks(params, callback);
+        switch (resource) {
+            case 'annotations.suggestions':
+                getDbpediaAnnotations(params, callback);
+                break;
+            case 'annotations.wikipedia':
+                getWikipediaLinks(params, callback);
+                break;
+            case 'annotations.uri':
+                getDbpediaURISuggestions(params, callback);
+                break;
+            default:
+                callback(null, {success: false, results: {}});
+                return;
         }
     }
 };
 
-function processSuggestions(params, callback) {
+function getDbpediaURISuggestions(params, callback) {
+    if (!params.keyword || !params.type) {
+        callback(null, {success: false, results: {}});
+        return;
+    }
+
+    let queryClass = '&Quer‌​yClass=' + params.type.toLowerCase();
+    let maxHits = '&MaxHits=' + MAX_HITS;
+    let url = DBPEDIA_LOOKUP_BASE_URL + encodeURI(params.keyword) + queryClass + maxHits;
+
+    rp.get({
+        uri: url,
+        headers: {
+            'Accept': 'application/json'
+        }
+    }).then((res) => {
+        callback(null, {
+            success: true,
+            results: JSON.parse(res).results
+        });
+    }).catch(err => {
+        callback(null, {success: false, results: {}});
+    });
+}
+
+function getDbpediaAnnotations(params, callback) {
     if (!params.text) {
         callback(null, {success: false, results: {}});
+        return;
     }
 
     let url = SPOTLIGHT_BASE_URL + encodeURI(params.text) + '&confidence=0.4&support=20';
@@ -41,12 +76,12 @@ function processSuggestions(params, callback) {
             'Accept': 'application/json',
             'Content-Type': 'application/x-www-form-urlencoded'
         }
-    }).then((res) => {
+    }).then(res => {
         callback(null, {
             success: true,
             results: JSON.parse(JSON.stringify(res || null ))
         });
-    }).catch((err) => {
+    }).catch(err => {
         callback(null, {success: false, results: {}});
     });
 }
@@ -74,7 +109,7 @@ function getWikipediaLinks(params, callback) {
             success: true,
             results: JSON.parse(res)
         });
-    }).catch((err) => {
+    }).catch(err => {
         callback(null, {success: false, results: {}});
     });
 

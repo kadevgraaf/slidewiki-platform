@@ -18,7 +18,7 @@ const customStyles = {
         marginRight           : '-50%',
         transform             : 'translate(-50%, -50%)',
         zIndex                : 15,
-        width                 : '200px'
+        width                 : '450px'
     }
 };
 
@@ -29,7 +29,8 @@ class AnnotationContextMenu extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            modalIsOpen: false
+            modalIsOpen: false,
+            type: ''
         };
 
         this.openModal = this.openModal.bind(this);
@@ -37,6 +38,7 @@ class AnnotationContextMenu extends React.Component {
     }
     handleAnnotate(e, data) {
         e.preventDefault();
+        this.setState({type: data.type});
         this.openModal();
     }
     getSuggestions(e) {
@@ -89,7 +91,7 @@ class AnnotationContextMenu extends React.Component {
                     onRequestClose={ this.closeModal }
                     style={ customStyles }
                     contentLabel="Add Entity">
-                    <EntityTypeForm />
+                    <EntityTypeForm type={ this.state.type } mode={ 'add' } onClose={ this.closeModal } />
                 </Modal>
                 <ContextMenu id="anno-context-menu"
                              onShow={ this.updateSelection.bind(this) }>
