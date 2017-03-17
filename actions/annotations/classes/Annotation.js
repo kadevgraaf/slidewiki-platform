@@ -11,13 +11,14 @@ const BASE_PROPERTY_TYPE = 'schema:name';
  * Created by korovin on 3/12/2017.
  */
 export default class Annotation {
-    constructor(uri, type) {
+    constructor(uri, type, name) {
         this.className = ENTITY_CLASS_PREFIX + type.toLowerCase();
         this.id = ENTITY_CLASS_PREFIX + shortid.generate();
         this.typeof = SCHEMA_TYPEOF_PREFIX + type;
         this.class = ENTITY_CLASS;
         this.type = type;
         this.uri = uri;
+        this.name = name;
     }
 
     /**

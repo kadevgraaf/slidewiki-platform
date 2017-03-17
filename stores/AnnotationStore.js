@@ -63,10 +63,14 @@ class AnnotationStore extends BaseStore {
         let wiki = anno.uri? this.wikiLinks[anno.uri] : null;
         TooltipCreator.addOnHover(anno, wiki);
     }
-    saveAnnotations(annotations) {
+    saveAnnotations(payload) {
+        console.log(payload);
+        let { annotations, links } = payload;
         if (!annotations || !annotations.length) {
             return;
         }
+
+        this.parseWikipediaLinks(links);
 
         for (let anno of annotations) {
             this.annotations.push(anno);
@@ -96,8 +100,6 @@ class AnnotationStore extends BaseStore {
             suggestion.type = resource['@types'].match(TYPE_REGEX)[1];
         }
         this.suggestions = Object.keys(suggestions).map(key => { return suggestions[key]; });
-
-        this.emitChange();
     }
     getUriSuggestions(res) {
         this.uriSuggestions = res.results.map(result => {
@@ -111,6 +113,11 @@ class AnnotationStore extends BaseStore {
         this.emitChange();
     }
     getWikipediaLinks(links) {
+        this.parseWikipediaLinks(links);
+
+        this.emitChange();
+    }
+    parseWikipediaLinks(links) {
         let { results: { results: { bindings } } } = links;
         if (!bindings.length) {
             return;
@@ -118,8 +125,6 @@ class AnnotationStore extends BaseStore {
         for (let binding of bindings) {
             this.wikiLinks[binding.subj.value] = binding.link.value;
         }
-
-        this.emitChange();
     }
     getState() {
         return {

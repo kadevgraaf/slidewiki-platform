@@ -6,7 +6,6 @@ import AnnotationStore from '../../stores/AnnotationStore';
 import addTempSelection from '../../actions/annotations/addTempSelection';
 import removeTempSelection from '../../actions/annotations/removeTempSelection';
 import getSuggestions from '../../actions/annotations/getSuggestions';
-import applyAnnotationSuggestions from "../../actions/annotations/applyAnnotationSuggestions";
 import removeUriSuggestions from "../../actions/annotations/removeUriSuggestions";
 import EntityTypeForm from './EntityTypeForm';
 
@@ -70,21 +69,13 @@ class AnnotationContextMenu extends React.Component {
     closeModal() {
         this.setState({modalIsOpen: false});
     }
-    initSuggestionItem(suggestions) {
-        if (suggestions && suggestions.length) {
-            this.context.executeAction(applyAnnotationSuggestions, {
-                suggestions: suggestions
-            });
-        }
-        return <MenuItem onClick={this.getSuggestions.bind(this)}>Get Suggestions</MenuItem>
-    }
     getTypeItems(types) {
         return types.map(type => {
             return <MenuItem data={ {type: type} } key={ type } onClick={this.handleAnnotate.bind(this)}>Add { type }</MenuItem>
         });
     }
     render() {
-        let { suggestions, types } = this.props.AnnotationStore;
+        let { types } = this.props.AnnotationStore;
 
         return (
             <div>
@@ -101,7 +92,7 @@ class AnnotationContextMenu extends React.Component {
                         { this.getTypeItems(types) }
                     </SubMenu>
                     <MenuItem>Remove</MenuItem>
-                    { this.initSuggestionItem(suggestions) }
+                    <MenuItem onClick={this.getSuggestions.bind(this)}>Get Suggestions</MenuItem>
                 </ContextMenu>
             </div>
         );

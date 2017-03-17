@@ -27,7 +27,8 @@ export default class TagWrapper {
             class: annotation.class,
             className: annotation.className,
             id: annotation.id,
-            uri: annotation.uri
+            uri: annotation.uri,
+            name: annotation.name
         };
     }
 
@@ -68,7 +69,7 @@ export default class TagWrapper {
      * @param searchOptions
      */
     static wrapSuggestion(suggestion, range, searchOptions) {
-        let annotation = new Annotation(suggestion.uri, suggestion.type);
+        let annotation = new Annotation(suggestion.uri, suggestion.type, suggestion.surface);
         let searchResultApplier = TagWrapper.initAppplier(annotation);
 
         if (range.findText(suggestion.surface, searchOptions)) {
