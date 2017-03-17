@@ -4,6 +4,7 @@ import {connectToStores} from 'fluxible-addons-react';
 import getUriSuggestions from "../../actions/annotations/getUriSuggestions";
 import removeUriSuggestions from "../../actions/annotations/removeUriSuggestions";
 import addAnnotation from "../../actions/annotations/addAnnotation";
+import getWikipediaLinks from "../../actions/annotations/getWikipediaLinks";
 
 const EDIT_BUTTON_MODE = 'edit';
 const ADD_BUTTON_MODE = 'add';
@@ -31,9 +32,16 @@ class EntityTypeForm extends React.Component {
         this.context.executeAction(addAnnotation, {
             name: selectedText,
             type: this.state.type,
-            uri: $(this.refs.uriDropdown).val()
+            uri: this.getUri(),
+            wiki: this.getWiki()
         });
         this.props.onClose();
+    }
+    getUri() {
+        return $(this.refs.uriDropdown).val();
+    }
+    getWiki() {
+        return $(this.refs.wikiInput).val();
     }
     onAddSuggestions(e) {
         e.preventDefault();
@@ -91,7 +99,7 @@ class EntityTypeForm extends React.Component {
             let html = uriSuggestions.map(suggestion => {
                 return (<option value={ suggestion } key={ suggestion } title={ suggestion }>{ suggestion }</option>)
             });
-            
+
             return html;
         }
     }
@@ -100,15 +108,32 @@ class EntityTypeForm extends React.Component {
         this.context.executeAction(removeUriSuggestions);
         this.props.onClose();
     }
+    onResolveWikipedia(e) {
+        e.preventDefault();
+        let uri = this.getUri();
+
+        if (!uri) {
+            alert('Please initialize first uri');
+            return;
+        }
+
+        this.context.executeAction(getWikipediaLinks, {
+            suggestions: [{id: uri.substring(28)}]
+        });
+    }
     render() {
+        let { wikiLinks } = this.props.AnnotationStore;
+        let uri = this.getUri();
+        const wiki = uri? wikiLinks[uri]: 'No Link';
+
         return (
             <div className="ui container">
                 <div className="ui grid">
                     <div className="sixteen wide column">
                         <form className="ui form">
-                            <h4 className="ui dividing header">{this.state.type}</h4>
+                            <h4 className="ui dividing header">{ this.state.type }</h4>
                             <div className="field">
-                                    <label htmlFor="">Entity URI</label>
+                                <label htmlFor="">Entity URI</label>
                                 <div className="ui grid">
                                     <div className="ten wide column">
                                         <select ref="uriDropdown" className="ui search dropdown" value={ this.state.uri } onChange={ this.handleChangeUri.bind(this) }>
@@ -119,7 +144,19 @@ class EntityTypeForm extends React.Component {
                                         <button className="ui primary button" onClick={this.onAddSuggestions.bind(this)}>Suggest URI</button>
                                     </div>
                                 </div>
-
+                            </div>
+                            <div className="field">
+                                <label htmlFor="">Wikipedia link</label>
+                                <div className="ui grid">
+                                    <div className="ten wide column">
+                                        <input type="text" name="wiki-link" ref="wikiInput" value={wiki}
+                                               placeholder="Wikipedia Link"
+                                               aria-required="true" disabled/>
+                                    </div>
+                                    <div className="four wide column">
+                                        <button className="ui primary button" onClick={this.onResolveWikipedia.bind(this)}>Bind to Wikipedia</button>
+                                    </div>
+                                </div>
                             </div>
                             <div className="field">
                                 <label htmlFor="">Choose type</label>

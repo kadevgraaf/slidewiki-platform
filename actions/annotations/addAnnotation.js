@@ -5,12 +5,12 @@ import TagWrapper from './utils/TagWrapper';
  * Created by korovin on 3/11/2017.
  */
 export default function addAnnotation(context, payload, done) {
-    let { type, uri } = payload;
+    let { type, uri} = payload;
     context.dispatch('RESTORE_SELECTION');
-
+    console.log(uri);
     let annotation = new Annotation(uri, type);
     let serialized = TagWrapper.wrapAnnotation(annotation);
-    
+
     context.dispatch('REMOVE_SELECTION');
     context.dispatch('SAVE_ANNOTATION', serialized);
     done();

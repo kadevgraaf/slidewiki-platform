@@ -11,11 +11,11 @@ export default function applyAnnotationSuggestions(context, payload, done) {
 
     let annotations = TagWrapper.wrapSuggestions(suggestions);
 
-    context.dispatch('SAVE_ANNOTATIONS', annotations);
-
     context.executeAction(getWikipediaLinks, {
         suggestions: suggestions
     });
-
+    
+    context.dispatch('SAVE_ANNOTATIONS', annotations);
+    
     done();
 }

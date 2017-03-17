@@ -20,6 +20,7 @@ class AnnotationStore extends BaseStore {
         this.suggestions = [];
         this.types = ['Organization', DEFAULT_OPTION, 'Place', 'CreativeWork', 'Product'];
         this.uriSuggestions = [];
+        this.wikiLinks = {};
     }
     loadAnnotations() {
         $('.r_entity').hover()
@@ -59,7 +60,8 @@ class AnnotationStore extends BaseStore {
     }
     saveAnnotation(anno) {
         this.annotations.push(anno);
-        TooltipCreator.addOnHover(anno);
+        let wiki = anno.uri? this.wikiLinks[anno.uri] : null;
+        TooltipCreator.addOnHover(anno, wiki);
     }
     saveAnnotations(annotations) {
         if (!annotations || !annotations.length) {
@@ -68,7 +70,8 @@ class AnnotationStore extends BaseStore {
 
         for (let anno of annotations) {
             this.annotations.push(anno);
-            TooltipCreator.addOnHover(anno);
+            let wiki = anno.uri? this.wikiLinks[anno.uri] : null;
+            TooltipCreator.addOnHover(anno, wiki);
         }
     }
     getSuggestions(payload) {
@@ -108,7 +111,15 @@ class AnnotationStore extends BaseStore {
         this.emitChange();
     }
     getWikipediaLinks(links) {
-        console.log(links);
+        let { results: { results: { bindings } } } = links;
+        if (!bindings.length) {
+            return;
+        }
+        for (let binding of bindings) {
+            this.wikiLinks[binding.subj.value] = binding.link.value;
+        }
+
+        this.emitChange();
     }
     getState() {
         return {
@@ -119,7 +130,8 @@ class AnnotationStore extends BaseStore {
             suggestions: this.suggestions,
             types: this.types,
             selectedText: this.selectedText,
-            uriSuggestions: this.uriSuggestions
+            uriSuggestions: this.uriSuggestions,
+            wikiLinks: this.wikiLinks
         }
     }
     dehydrate() {
@@ -131,7 +143,8 @@ class AnnotationStore extends BaseStore {
             suggestions: this.suggestions,
             types: this.types,
             selectedText: this.selectedText,
-            uriSuggestions: this.uriSuggestions
+            uriSuggestions: this.uriSuggestions,
+            wikiLinks: this.wikiLinks
         };
     }
     rehydrate(state) {
@@ -143,6 +156,7 @@ class AnnotationStore extends BaseStore {
         this.types = state.types;
         this.selectedText = state.selectedText;
         this.uriSuggestions = state.uriSuggestions;
+        this.wikiLinks = state.wikiLinks;
     }
 }
 

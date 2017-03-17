@@ -26,7 +26,8 @@ export default class TagWrapper {
             type: annotation.type,
             class: annotation.class,
             className: annotation.className,
-            id: annotation.id
+            id: annotation.id,
+            uri: annotation.uri
         };
     }
 
@@ -55,7 +56,7 @@ export default class TagWrapper {
             if (surface === '') continue;
             annotations.push(TagWrapper.wrapSuggestion(suggestion, range, searchOptions));
         }
-        
+
         return annotations;
     }
 
@@ -74,7 +75,7 @@ export default class TagWrapper {
             searchResultApplier.applyToRange(range);
             range.collapse(false);
         }
-        
+
         return annotation;
     }
 
