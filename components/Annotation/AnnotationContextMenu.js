@@ -30,7 +30,8 @@ class AnnotationContextMenu extends React.Component {
         super(props);
         this.state = {
             modalIsOpen: false,
-            type: ''
+            type: '',
+            chosen: null
         };
 
         this.openModal = this.openModal.bind(this);
@@ -53,9 +54,23 @@ class AnnotationContextMenu extends React.Component {
     }
     updateSelection() {
         this.context.executeAction(addTempSelection);
+        this.getHighlightedOnOpened();
+    }
+    /**
+     * If context menu opened over annotated element
+     * get this element
+     */
+    getHighlightedOnOpened() {
+        let chosenElement = $('#inlineContent').find('.r_highlight');
+        if (chosenElement) {
+            this.setState({chosen: chosenElement});
+        }
     }
     removeSelection() {
         this.context.executeAction(removeTempSelection);
+    }
+    cleanChosenElement() {
+        this.setState({chosen: null});
     }
     openModal() {
         let {ranges} = this.props.AnnotationStore;
@@ -65,6 +80,17 @@ class AnnotationContextMenu extends React.Component {
         }
 
         this.setState({modalIsOpen: true});
+    }
+    removeAnnotation() {
+        if (this.state.chosen && this.state.chosen.length) {
+            let child = this.state.chosen.children();
+            // first remove parent
+            child.unwrap();
+            // then remove property annotation
+            child.contents().unwrap();
+        } else {
+            alert('Please hover on annotation you want to remove');
+        }
     }
     closeModal() {
         this.setState({modalIsOpen: false});
@@ -87,11 +113,12 @@ class AnnotationContextMenu extends React.Component {
                     <EntityTypeForm type={ this.state.type } mode={ 'add' } onClose={ this.closeModal } />
                 </Modal>
                 <ContextMenu id="anno-context-menu"
-                             onShow={ this.updateSelection.bind(this) }>
+                             onShow={ this.updateSelection.bind(this) }
+                             onHide={ this.cleanChosenElement.bind(this) }>
                     <SubMenu title="Add As Entity">
                         { this.getTypeItems(types) }
                     </SubMenu>
-                    <MenuItem>Remove</MenuItem>
+                    <MenuItem onClick={this.removeAnnotation.bind(this)}>Remove</MenuItem>
                     <MenuItem onClick={this.getSuggestions.bind(this)}>Get Suggestions</MenuItem>
                 </ContextMenu>
             </div>
