@@ -20,6 +20,13 @@ export default class Annotation {
         this.uri = uri;
     }
 
+    /**
+     * @return {string}
+     */
+    static get BASE_ENTITY_CLASS() {
+        return ENTITY_CLASS;
+    }
+
     toHtml(text) {
         return `<span class="${PROPERTY_CLASS} ${BASE_PROPERTY_CLASS}" property="schema:name">${text}</span>`;
     }

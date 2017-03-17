@@ -1,6 +1,8 @@
 import BaseStore from 'fluxible/addons/BaseStore';
 import rangy from 'rangy/lib/rangy-core';
 import 'rangy/lib/rangy-selectionsaverestore';
+import TooltipCreator from '../actions/annotations/utils/TooltipCreator';
+
 const DEFAULT_OPTION = 'Person';
 const TYPE_REGEX = /Schema:(Place|Organization|Person|CreativeWork|Product)/;
 
@@ -57,25 +59,17 @@ class AnnotationStore extends BaseStore {
     }
     saveAnnotation(anno) {
         this.annotations.push(anno);
-        this.addOnHover(anno);
-        this.emitChange();
+        TooltipCreator.addOnHover(anno);
     }
-    addOnHover(anno) {
-        let annotations = $('#inlineContent').find('span[data-id="' + anno.id + '"]');
-        annotations.mouseover(e => {
-            e.stopPropagation();
-            annotations.addClass('r_highlight');
-        }).mouseout(_ => {
-            annotations.removeClass('r_highlight');
-        }).qtip({
-            content: {
-                title: 'Semantic Annotation',
-                text: 'Type: ' + anno.type
-            },
-            position: {
-                target: 'mouse', // Use the mouse position as the position origin
-                adjust: { x: 5, y: 5 } // Offset it slightly from under the mouse
-        }});
+    saveAnnotations(annotations) {
+        if (!annotations || !annotations.length) {
+            return;
+        }
+
+        for (let anno of annotations) {
+            this.annotations.push(anno);
+            TooltipCreator.addOnHover(anno);
+        }
     }
     getSuggestions(payload) {
         if (!payload || !payload.results || (Object.keys(payload.results).length === 0)) {
@@ -160,6 +154,7 @@ AnnotationStore.handlers = {
     'UPDATE_RANGE_SELECTION': 'handleRanges',
     'REMOVE_RANGE_SELECTION': 'handleRanges',
     'SAVE_ANNOTATION': 'saveAnnotation',
+    'SAVE_ANNOTATIONS': 'saveAnnotations',
     'REMOVE_ANNOTATION': 'removeAnnotation',
     'GET_SUGGESTIONS': 'getSuggestions',
     'GET_WIKIPEDIA_LINKS': 'getWikipediaLinks',
