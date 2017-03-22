@@ -8,6 +8,7 @@ import removeTempSelection from '../../actions/annotations/removeTempSelection';
 import getSuggestions from '../../actions/annotations/getSuggestions';
 import removeUriSuggestions from "../../actions/annotations/removeUriSuggestions";
 import EntityTypeForm from './EntityTypeForm';
+import AddPropertyItem from './AddPropertyItem';
 
 const customStyles = {
     content : {
@@ -120,6 +121,7 @@ class AnnotationContextMenu extends React.Component {
                     </SubMenu>
                     <MenuItem onClick={this.removeAnnotation.bind(this)}>Remove</MenuItem>
                     <MenuItem onClick={this.getSuggestions.bind(this)}>Get Suggestions</MenuItem>
+                    <AddPropertyItem chosen={ this.state.chosen } />
                 </ContextMenu>
             </div>
         );
