@@ -1,4 +1,5 @@
 import rp from 'request-promise';
+import { Microservices } from '../configs/microservices';
 
 const SPARQL_QUERY = `PREFIX dbo:  <http://dbpedia.org/resource/>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
@@ -34,8 +35,50 @@ export default {
                 callback(null, {success: false, results: {}});
                 return;
         }
+    },
+    create: (req, resource, params, config, callback) => {
+        switch (resource) {
+            case 'annotations.new':
+                saveNewAnnotation(params, callback);
+                break;
+            default:
+                return;
+        }
     }
 };
+
+function saveNewAnnotation(params, callback) {
+    if (!params.annotation || !params.html || !params.slide || !params.deck) {
+        callback(null, {success: false, results: {}});
+        return;
+    }
+
+    const { semsearch } = Microservices;
+    const uri = semsearch.uri + ":" + semsearch.port + semsearch.path + '/annotations';
+    const body = {
+        body: params.html,
+        slide: params.slide,
+        deck: params.deck,
+        typeof: params.annotation.typeof,
+        id: params.annotation.id,
+        resource: params.annotation.uri
+    };
+
+    rp.post({
+        uri: uri,
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    }).then(res => {
+        callback(null, {
+            success: true,
+            results: JSON.parse(JSON.stringify(res))
+        });
+    }).catch(err => {
+        callback(null, {success: false, results: {}});
+    });
+}
 
 function getDbpediaURISuggestions(params, callback) {
     if (!params.keyword || !params.type) {
@@ -112,5 +155,4 @@ function getWikipediaLinks(params, callback) {
     }).catch(err => {
         callback(null, {success: false, results: {}});
     });
-
 }

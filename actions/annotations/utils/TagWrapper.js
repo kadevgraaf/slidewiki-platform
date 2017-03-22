@@ -21,15 +21,7 @@ export default class TagWrapper {
         TagWrapper.highlightSelection(annotation, applier);
         TagWrapper.wrapProperty(annotation);
 
-        return {
-            selection: TagWrapper.serializeSelection(),
-            type: annotation.type,
-            class: annotation.class,
-            className: annotation.className,
-            id: annotation.id,
-            uri: annotation.uri,
-            name: annotation.name
-        };
+        return annotation;
     }
 
     /**

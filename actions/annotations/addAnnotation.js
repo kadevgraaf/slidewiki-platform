@@ -1,5 +1,6 @@
 import Annotation from './classes/Annotation';
 import TagWrapper from './utils/TagWrapper';
+import DeckPageStore from "../../stores/DeckPageStore";
 
 /**
  * Created by korovin on 3/11/2017.
@@ -10,7 +11,19 @@ export default function addAnnotation(context, payload, done) {
     let annotation = new Annotation(uri, type, name);
     let serialized = TagWrapper.wrapAnnotation(annotation);
 
-    context.dispatch('REMOVE_SELECTION');
-    context.dispatch('SAVE_ANNOTATION', serialized);
-    done();
+    const { selector: { id: deckId, sid: slideId } } = context.getStore(DeckPageStore).getState();
+
+    let body = {
+        annotation: serialized,
+        html: serialized.jqHTML[0].outerHTML,
+        slide: slideId,
+        deck: deckId
+    };
+
+    context.service.create('annotations.new', body, {timeout: 20 * 1000}, (err, res) => {
+        console.log(res);
+        context.dispatch('REMOVE_SELECTION');
+        context.dispatch('SAVE_ANNOTATION', serialized);
+        done();
+    });
 }
