@@ -126,6 +126,12 @@ class AnnotationStore extends BaseStore {
             this.wikiLinks[binding.subj.value] = binding.link.value;
         }
     }
+    getPropertyMetaDbpedia(meta) {
+        console.log(meta);
+    }
+    getPropertiesDbpedia(props) {
+        console.log(props);
+    }
     getState() {
         return {
             ranges: this.ranges,
@@ -178,7 +184,9 @@ AnnotationStore.handlers = {
     'GET_SUGGESTIONS': 'getSuggestions',
     'GET_WIKIPEDIA_LINKS': 'getWikipediaLinks',
     'GET_URI_SUGGESTIONS': 'getUriSuggestions',
-    'REMOVE_URI_SUGGESTIONS': 'removeUriSuggestions'
+    'REMOVE_URI_SUGGESTIONS': 'removeUriSuggestions',
+    'GET_DBPEDIA_PROPERTY_META': 'getPropertyMetaDbpedia',
+    'GET_DBPEDIA_PROPERTIES': 'getPropertiesDbpedia'
 };
 
 export default AnnotationStore;

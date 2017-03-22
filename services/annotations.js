@@ -32,11 +32,11 @@ export default {
             case 'annotations.uri':
                 getDbpediaURISuggestions(params, callback);
                 break;
-            case 'dbpedia.type':
-                getDbpediaClassTypes(params, callback);
+            case 'annotations.dbpedia_property':
+                getDbpediaProperties(params, callback);
                 break;
-            case 'dbpedia.property':
-                getDB
+            case 'annotations.dbpedia_propmeta':
+                getDbpediaPropertyMeta(params, callback);
                 break;
             default:
                 callback(null, {success: false, results: {}});
@@ -55,9 +55,9 @@ export default {
     }
 };
 
-function getDbpediaClassTypes(params, callback) {
+function getDbpediaProperties(params, callback) {
     const { type } = params;
-    
+
     if (!type) {
         callback(null, {success: false, results: {}});
         return;
@@ -86,14 +86,14 @@ function getDbpediaClassTypes(params, callback) {
 
 function getDbpediaPropertyMeta(params, callback) {
     const { property } = params;
-    
+
     if (!property) {
         callback(null, {success: false, results: {}});
         return;
     }
 
     const sparql = SPARQLAnnotationHelper.getPropertyMeta(property);
-    
+
     rp.post({
         uri: DBPEDIA_VIRTUOSO_BASE_URL,
         headers: {
