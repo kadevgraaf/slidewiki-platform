@@ -1,6 +1,7 @@
+import React from 'react';
 import { MenuItem } from 'react-contextmenu';
 import Modal from 'react-modal';
-import React from 'react';
+import EntityPropertyForm from './PropertyForm/EntityPropertyForm';
 
 const customStyles = {
     content : {
@@ -11,7 +12,8 @@ const customStyles = {
         marginRight           : '-50%',
         transform             : 'translate(-50%, -50%)',
         zIndex                : 15,
-        width                 : '450px'
+        width                 : '450px',
+        height                : '500px'
     }
 };
 
@@ -22,7 +24,8 @@ export default class AddPropertyItem extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            modalIsOpen: false
+            modalIsOpen: false,
+            type: ''
         };
     }
 
@@ -30,7 +33,10 @@ export default class AddPropertyItem extends React.Component {
         e.preventDefault();
         console.log(this.props.chosen);
         if (this.props.chosen) {
-            this.setState({modalIsOpen: true});
+            this.setState({
+                modalIsOpen: true,
+                type: this.props.chosen.attr('typeof')
+            });
             return;
         }
 
@@ -44,7 +50,7 @@ export default class AddPropertyItem extends React.Component {
                     onRequestClose={ this.closeModal }
                     style={ customStyles }
                     contentLabel="Add Property">
-                    <h1>Add property</h1>
+                    <EntityPropertyForm  type={ this.state.type } />
                 </Modal>
                 <MenuItem onClick={this.onClick.bind(this)}>Add Property</MenuItem>
             </div>
