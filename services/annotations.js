@@ -1,5 +1,6 @@
 import rp from 'request-promise';
 import { Microservices } from '../configs/microservices';
+import SPARQLAnnotationHelper from "../actions/annotations/utils/SPARQLAnnotationHelper";
 
 const SPARQL_QUERY = `PREFIX dbo:  <http://dbpedia.org/resource/>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
@@ -31,12 +32,19 @@ export default {
             case 'annotations.uri':
                 getDbpediaURISuggestions(params, callback);
                 break;
+            case 'dbpedia.type':
+                getDbpediaClassTypes(params, callback);
+                break;
+            case 'dbpedia.property':
+                getDB
+                break;
             default:
                 callback(null, {success: false, results: {}});
                 return;
         }
     },
-    create: (req, resource, params, config, callback) => {
+    create: (req, resource, params, body, config, callback) => {
+        console.log(callback);
         switch (resource) {
             case 'annotations.new':
                 saveNewAnnotation(params, callback);
@@ -46,6 +54,64 @@ export default {
         }
     }
 };
+
+function getDbpediaClassTypes(params, callback) {
+    const { type } = params;
+    
+    if (!type) {
+        callback(null, {success: false, results: {}});
+        return;
+    }
+
+    const sparql = SPARQLAnnotationHelper.getProperties(type);
+
+    rp.post({
+        uri: DBPEDIA_VIRTUOSO_BASE_URL,
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        form: {
+            query: sparql,
+            format: 'application/json'
+        }
+    }).then((res) => {
+        callback(null, {
+            success: true,
+            results: JSON.parse(res)
+        });
+    }).catch(err => {
+        callback(null, {success: false, results: {}});
+    });
+}
+
+function getDbpediaPropertyMeta(params, callback) {
+    const { property } = params;
+    
+    if (!property) {
+        callback(null, {success: false, results: {}});
+        return;
+    }
+
+    const sparql = SPARQLAnnotationHelper.getPropertyMeta(property);
+    
+    rp.post({
+        uri: DBPEDIA_VIRTUOSO_BASE_URL,
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        form: {
+            query: sparql,
+            format: 'application/json'
+        }
+    }).then((res) => {
+        callback(null, {
+            success: true,
+            results: JSON.parse(res)
+        });
+    }).catch(err => {
+        callback(null, {success: false, results: {}});
+    });
+}
 
 function saveNewAnnotation(params, callback) {
     if (!params.annotation || !params.html || !params.slide || !params.deck) {
@@ -61,7 +127,8 @@ function saveNewAnnotation(params, callback) {
         deck: params.deck,
         typeof: params.annotation.typeof,
         id: params.annotation.id,
-        resource: params.annotation.uri
+        resource: params.annotation.uri,
+        keyword: params.annotation.name
     };
 
     rp.post({
@@ -69,8 +136,12 @@ function saveNewAnnotation(params, callback) {
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
-        }
+        },
+        body: JSON.stringify(body)
     }).then(res => {
+        console.log(callback);
+        console.log('SUCC');
+        console.log(res);
         callback(null, {
             success: true,
             results: JSON.parse(JSON.stringify(res))

@@ -1,0 +1,36 @@
+/**
+ * Created by korovin on 3/22/2017.
+ */
+export default class SPARQLAnnotationHelper {
+    /**
+     * Get properties for type from dbpedia
+     * @param type
+     * @returns {string}
+     */
+    static getProperties(type) {
+        return `
+            SELECT DISTINCT ?property ?nlabel 
+            WHERE { {
+                ?property <http://www.w3.org/2000/01/rdf-schema#domain> <http://dbpedia.org/ontology/${type}> .
+                ?property <http://www.w3.org/2000/01/rdf-schema#label> ?label .
+                FILTER ( LANG(?label) = "en" )
+            } UNION {
+              ?property <http://www.w3.org/2000/01/rdf-schema#domain> ?class . 
+              <http://dbpedia.org/ontology/${type}> rdfs:subClassOf+ ?class .
+              ?property <http://www.w3.org/2000/01/rdf-schema#label> ?label .
+              FILTER ( LANG(?label) = "en" )
+            }
+            BIND (STR(?label)  AS ?nlabel)
+            }`
+    }
+
+    static getPropertyMeta(property) {
+        return `
+            SELECT DISTINCT ?type ?range
+            WHERE { 
+                OPTIONAL { <${property}> <http://www.w3.org/2000/01/rdf-schema#range> ?range }
+                <${property}> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?type .
+                FILTER(STRSTARTS(STR(?type), "http://www.w3.org/2002/07/owl#"))
+            }`
+    }
+}
