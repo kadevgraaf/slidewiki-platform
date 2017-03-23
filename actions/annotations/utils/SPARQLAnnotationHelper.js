@@ -11,12 +11,12 @@ export default class SPARQLAnnotationHelper {
         return `
             SELECT DISTINCT ?property ?nlabel 
             WHERE { {
-                ?property <http://www.w3.org/2000/01/rdf-schema#domain> <http://dbpedia.org/ontology/${type}> .
+                ?property <http://www.w3.org/2000/01/rdf-schema#domain> <${type}> .
                 ?property <http://www.w3.org/2000/01/rdf-schema#label> ?label .
                 FILTER ( LANG(?label) = "en" )
             } UNION {
               ?property <http://www.w3.org/2000/01/rdf-schema#domain> ?class . 
-              <http://dbpedia.org/ontology/${type}> rdfs:subClassOf+ ?class .
+              <${type}> rdfs:subClassOf+ ?class .
               ?property <http://www.w3.org/2000/01/rdf-schema#label> ?label .
               FILTER ( LANG(?label) = "en" )
             }

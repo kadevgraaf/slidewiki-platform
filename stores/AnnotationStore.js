@@ -4,7 +4,7 @@ import 'rangy/lib/rangy-selectionsaverestore';
 import TooltipCreator from '../actions/annotations/utils/TooltipCreator';
 
 const DEFAULT_OPTION = 'Person';
-const TYPE_REGEX = /Schema:(Place|Organization|Person|CreativeWork|Product)/;
+const TYPE_REGEX = /Dbpedia:(Place|Organisation|Person|CreativeWork|Product)/;
 
 /**
  * Created by korovin on 3/11/2017.
@@ -18,9 +18,10 @@ class AnnotationStore extends BaseStore {
         this.ranges = [];
         this.annotations = [];
         this.suggestions = [];
-        this.types = ['Organization', DEFAULT_OPTION, 'Place', 'CreativeWork', 'Product'];
+        this.types = ['Organisation', DEFAULT_OPTION, 'Place', 'CreativeWork', 'Product'];
         this.uriSuggestions = [];
         this.wikiLinks = {};
+        this.curProps = [];
     }
     loadAnnotations() {
         $('.r_entity').hover()
@@ -130,7 +131,8 @@ class AnnotationStore extends BaseStore {
         console.log(meta);
     }
     getPropertiesDbpedia(props) {
-        console.log(props);
+        this.curProps = props;
+        this.emitChange();
     }
     getState() {
         return {
@@ -142,7 +144,8 @@ class AnnotationStore extends BaseStore {
             types: this.types,
             selectedText: this.selectedText,
             uriSuggestions: this.uriSuggestions,
-            wikiLinks: this.wikiLinks
+            wikiLinks: this.wikiLinks,
+            curProps: this.curProps
         }
     }
     dehydrate() {
@@ -155,7 +158,8 @@ class AnnotationStore extends BaseStore {
             types: this.types,
             selectedText: this.selectedText,
             uriSuggestions: this.uriSuggestions,
-            wikiLinks: this.wikiLinks
+            wikiLinks: this.wikiLinks,
+            curProps: this.curProps
         };
     }
     rehydrate(state) {
@@ -168,6 +172,7 @@ class AnnotationStore extends BaseStore {
         this.selectedText = state.selectedText;
         this.uriSuggestions = state.uriSuggestions;
         this.wikiLinks = state.wikiLinks;
+        this.curProps = state.curProps;
     }
 }
 

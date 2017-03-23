@@ -21,7 +21,6 @@ export default function addAnnotation(context, payload, done) {
     };
 
     context.service.create('annotations.new', body, {timeout: 20 * 1000}, (err, res) => {
-        console.log(res);
         context.dispatch('REMOVE_SELECTION');
         context.dispatch('SAVE_ANNOTATION', serialized);
         done();

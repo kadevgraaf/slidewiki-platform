@@ -31,7 +31,6 @@ export default class AddPropertyItem extends React.Component {
 
     onClick(e) {
         e.preventDefault();
-        console.log(this.props.chosen);
         if (this.props.chosen) {
             this.setState({
                 modalIsOpen: true,

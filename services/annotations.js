@@ -64,6 +64,7 @@ function getDbpediaProperties(params, callback) {
     }
 
     const sparql = SPARQLAnnotationHelper.getProperties(type);
+    console.log(sparql);
 
     rp.post({
         uri: DBPEDIA_VIRTUOSO_BASE_URL,

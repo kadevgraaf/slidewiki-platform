@@ -14,7 +14,7 @@ export default class EntityPropertyForm extends React.Component {
                             <h4 className="ui dividing header">{ this.props.type }</h4>
                             <div className="field">
                                 <label htmlFor="">Choose property: </label>
-                                <PropertyDropdown />
+                                <PropertyDropdown type={ this.props.type } />
                             </div>
                         </div>
                     </div>
