@@ -28,7 +28,12 @@ export default class AddPropertyItem extends React.Component {
             type: ''
         };
     }
-
+    closeModal(e) {
+        if (e) {
+            e.preventDefault();
+        }
+        this.setState({modalIsOpen: false});
+    }
     onClick(e) {
         e.preventDefault();
         if (this.props.chosen) {
@@ -46,10 +51,10 @@ export default class AddPropertyItem extends React.Component {
             <div>
                 <Modal
                     isOpen={ this.state.modalIsOpen }
-                    onRequestClose={ this.closeModal }
+                    onRequestClose={ this.closeModal.bind(this) }
                     style={ customStyles }
                     contentLabel="Add Property">
-                    <EntityPropertyForm  type={ this.state.type } />
+                    <EntityPropertyForm closeModel={ this.closeModal.bind(this) } type={ this.state.type } />
                 </Modal>
                 <MenuItem onClick={this.onClick.bind(this)}>Add Property</MenuItem>
             </div>

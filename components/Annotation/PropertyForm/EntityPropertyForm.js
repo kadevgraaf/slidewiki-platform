@@ -6,13 +6,15 @@ import InputSet from './InputSet';
  * Created by korovin on 3/22/2017.
  */
 export default class EntityPropertyForm extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            modalIsOpen: false
+        }
+    }
     onAddProperty(e) {
         e.preventDefault();
         // TODO: get all properties from store
-    }
-    onCancel(e) {
-        e.preventDefault();
-        // TODO: close modal window
     }
     handleValueChange(e) {
         e.preventDefault();
@@ -37,7 +39,7 @@ export default class EntityPropertyForm extends React.Component {
                         </div>
                         <div className="field" style={{ marginTop: '130px' }}>
                             <button className="ui primary button" onClick={this.onAddProperty.bind(this)}>Add</button>
-                            <button className="ui red button" onClick={this.onCancel.bind(this)}>Cancel</button>
+                            <button className="ui red button" onClick={this.props.closeModel}>Cancel</button>
                         </div>
                     </div>
                 </div>
