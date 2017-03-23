@@ -130,7 +130,6 @@ class AnnotationStore extends BaseStore {
     }
     getPropertyMetaDbpedia(meta) {
         this.curPropType = meta;
-        console.log(this.curPropType);
         this.emitChange();
     }
     getPropertiesDbpedia(props) {

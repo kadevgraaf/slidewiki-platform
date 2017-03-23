@@ -6,7 +6,7 @@ import React from 'react';
 export default class ObjectInput extends React.Component {
     render() {
         return <div className="ui labeled input">
-            <input type="text" placeholder="string" />
+            <input type="text" placeholder={ this.props.prop.range? this.props.prop.range: '' } onChange={ this.props.onChange } />
         </div>
     }
 }

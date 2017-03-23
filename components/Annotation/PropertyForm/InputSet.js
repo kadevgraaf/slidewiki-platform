@@ -17,34 +17,29 @@ class InputSet extends React.Component {
             type: ''
         }
     }
-    componentWillUpdate() {
-        console.log('update');
-    }
-    handleValueChange(e) {
-        e.preventDefault();
-        console.log(e.target.value);
-    }
     initInput() {
         const { curPropType } = this.props.AnnotationStore;
         if (!curPropType) {
-            return;
+            return <div className="ui labeled input disabled">
+                    <input type="text" placeholder="Please choose property first" />
+                </div>;
         }
 
         if (curPropType.type === PropertyHelper.OBJECT_TYPE_VAL) {
-            return <ObjectInput range={ curPropType.range } />
+            return <ObjectInput prop={ curPropType } onChange={ this.props.onChange } />
         } else if (curPropType.type === PropertyHelper.DATATYPE_TYPE_VAL) {
             switch (curPropType.range) {
                 case 'date':
-                    return <DateInput />;
+                    return <DateInput prop={ curPropType } onChange={ this.props.onCalendarChange } />;
                     break;
                 case 'gYear':
-                    return <YearInput />;
+                    return <YearInput prop={ curPropType } onChange={ this.props.onCalendarChange } />;
                     break;
                 default:
-                    return <StringInput />;
+                    return <StringInput prop={ curPropType } onChange={ this.props.onChange } />;
             }
         } else {
-            return <StringInput />;
+            return <StringInput prop={ curPropType } onChange={ this.props.onChange } />;
         }
     }
     render() {

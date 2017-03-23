@@ -5,13 +5,17 @@ import React from 'react';
  */
 export default class YearInput extends React.Component {
     componentDidMount() {
-        // TODO: init calendar
+        // init calendar
+        $(this._inp).calendar({
+            type: 'year',
+            onChange: (date, text, mode) => this.props.onChange(date, text, mode)
+        });
     }
     render() {
         return (
-            <div class="ui calendar" id="example8">
-                <div class="ui input left icon">
-                    <i class="time icon" />
+            <div className="ui calendar" ref={inp => this._inp = inp }>
+                <div className="ui input left icon">
+                    <i className="time icon" />
                     <input type="text" placeholder="Time" />
                 </div>
             </div>)

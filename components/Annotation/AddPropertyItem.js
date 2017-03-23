@@ -13,7 +13,7 @@ const customStyles = {
         transform             : 'translate(-50%, -50%)',
         zIndex                : 15,
         width                 : '450px',
-        height                : '500px'
+        height                : '380px'
     }
 };
 

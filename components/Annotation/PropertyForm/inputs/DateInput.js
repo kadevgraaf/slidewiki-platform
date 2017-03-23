@@ -5,13 +5,17 @@ import React from 'react';
  */
 export default class DateInput extends React.Component {
     componentDidMount() {
-        // TODO: init calendar
+        // init calendar
+        $(this._inp).calendar({
+            type: 'date',
+            onChange: (date, text, mode) => this.props.onChange(date, text, mode)
+        });
     }
     render() {
         return (
-            <div class="ui calendar" id="example2">
-                <div class="ui input left icon">
-                    <i class="calendar icon" />
+            <div className="ui calendar" ref={inp => this._inp = inp }>
+                <div className="ui input left icon">
+                    <i className="calendar icon" />
                     <input type="text" placeholder="Date" />
                 </div>
             </div>)
