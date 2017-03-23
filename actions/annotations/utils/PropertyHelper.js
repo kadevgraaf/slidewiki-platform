@@ -38,6 +38,8 @@ export default class PropertyHelper {
         } else if ((type === OBJECT_TYPE_VAL) &&
             (range.value.substring(0, 28) === OBJECT_DBPEDIA_NS)) {
             return range.value.substring(28);
+        } else if (range.value) {
+            return range.value;
         } else {
             return null;
         }

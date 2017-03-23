@@ -21,6 +21,7 @@ class DefaultHTMLLayout extends React.Component {
                 {/* Vendors css bundle */
                     this.props.addAssets ? <link href="/public/css/vendor.bundle.css" rel="stylesheet" type="text/css" />: <style></style>
                 }
+                <link rel="stylesheet" href="/node_modules/semantic-ui-calendar/dist/calendar.min.css" />
                 {/*<link href="/custom_modules/reveal.js/css/print/pdf.css" rel="stylesheet" type="text/css" />*/}
                 {/* we add this config option for mathjax so we can better control when the typesetting will occur */}
                 <script type="text/x-mathjax-config" dangerouslySetInnerHTML={{__html:'MathJax.Hub.Config({skipStartupTypeset: true});'}}></script>
@@ -64,6 +65,7 @@ class DefaultHTMLLayout extends React.Component {
                 <script type="text/javascript" src="https://slidewiki.atlassian.net/s/5e2fc7b2a8ba40bc00a09a4f81a301c8-T/rfg5q6/100012/c/1000.0.9/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-UK&collectorId=241c9e18"></script>
                 <script src="/sweetalert2/dist/sweetalert2.min.js"></script>
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/qtip2/3.0.3/basic/jquery.qtip.min.js"></script>
+                <script type="text/javascript" src="/node_modules/semantic-ui-calendar/dist/calendar.min.js"></script>
 
                 {/*<script>hljs.initHighlightingOnLoad();</script>*/}
             </body>
