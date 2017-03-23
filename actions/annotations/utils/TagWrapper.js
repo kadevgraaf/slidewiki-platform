@@ -4,7 +4,7 @@ import 'rangy/lib/rangy-classapplier';
 import 'rangy/lib/rangy-serializer';
 import 'rangy/lib/rangy-textrange';
 import Annotation from "../classes/Annotation";
-import shortid from 'shortid';
+import Hashids from 'hashids';
 
 /**
  * Created by korovin on 3/17/2017.
@@ -62,7 +62,8 @@ export default class TagWrapper {
      * @param searchOptions
      */
     static wrapSuggestion(suggestion, range, searchOptions) {
-        let annotation = new Annotation(suggestion.uri, suggestion.type, suggestion.surface, shortid.generate());
+        let hasher = new Hashids('', 15);
+        let annotation = new Annotation(suggestion.uri, suggestion.type, suggestion.surface, hasher.encode(1));
         let searchResultApplier = TagWrapper.initAppplier(annotation);
 
         if (range.findText(suggestion.surface, searchOptions)) {

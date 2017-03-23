@@ -1,7 +1,7 @@
 import Annotation from './classes/Annotation';
 import TagWrapper from './utils/TagWrapper';
 import DeckPageStore from "../../stores/DeckPageStore";
-import shortid from 'shortid';
+import Hashids from 'hashids';
 
 /**
  * Created by korovin on 3/11/2017.
@@ -9,7 +9,8 @@ import shortid from 'shortid';
 export default function addAnnotation(context, payload, done) {
     let { type, uri, name } = payload;
     context.dispatch('RESTORE_SELECTION');
-    let annotation = new Annotation(uri, type, name, shortid.generate());
+    let hasher = new Hashids('', 15);
+    let annotation = new Annotation(uri, type, name, hasher.encode(1));
     let serialized = TagWrapper.wrapAnnotation(annotation);
 
     const { selector: { id: deckId, sid: slideId } } = context.getStore(DeckPageStore).getState();
