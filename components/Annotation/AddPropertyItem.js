@@ -54,7 +54,7 @@ export default class AddPropertyItem extends React.Component {
                     onRequestClose={ this.closeModal.bind(this) }
                     style={ customStyles }
                     contentLabel="Add Property">
-                    <EntityPropertyForm closeModel={ this.closeModal.bind(this) } type={ this.state.type } />
+                    <EntityPropertyForm closeModal={ this.closeModal.bind(this) } type={ this.state.type } />
                 </Modal>
                 <MenuItem onClick={this.onClick.bind(this)}>Add Property</MenuItem>
             </div>

@@ -1,27 +1,40 @@
 import React from 'react';
 import PropertyDropdown from './PropertyDropdown';
 import InputSet from './InputSet';
+import { connectToStores } from 'fluxible-addons-react';
+import AnnotationStore from "../../../stores/AnnotationStore";
 
 /**
  * Created by korovin on 3/22/2017.
  */
-export default class EntityPropertyForm extends React.Component {
+class EntityPropertyForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            modalIsOpen: false
+            modalIsOpen: false,
+            value: ''
         }
     }
     onAddProperty(e) {
         e.preventDefault();
+        let { value } = this.state;
+        if (!value) {
+            alert('value is empty');
+            return;
+        }
+
+        const { curPropType } = this.props.AnnotationStore;
+        console.log(value);
+        console.log(curPropType);
+        this.props.closeModal();
         // TODO: get all properties from store
     }
     handleValueChange(e) {
         e.preventDefault();
-        console.log(e.target.value);
+        this.setState({ value: e.target.value });
     }
     handleValueCalendarChange(date, text, mode) {
-        console.log(date);
+        this.setState({ value: date });
     }
     render() {
         return (
@@ -39,7 +52,7 @@ export default class EntityPropertyForm extends React.Component {
                         </div>
                         <div className="field" style={{ marginTop: '130px' }}>
                             <button className="ui primary button" onClick={this.onAddProperty.bind(this)}>Add</button>
-                            <button className="ui red button" onClick={this.props.closeModel}>Cancel</button>
+                            <button className="ui red button" onClick={this.props.closeModal}>Cancel</button>
                         </div>
                     </div>
                 </div>
@@ -47,3 +60,17 @@ export default class EntityPropertyForm extends React.Component {
         )
     }
 }
+
+
+EntityPropertyForm.contextTypes = {
+    executeAction: React.PropTypes.func.isRequired
+};
+
+EntityPropertyForm = connectToStores(EntityPropertyForm, [AnnotationStore], (context, props) => {
+    return {
+        AnnotationStore: context.getStore(AnnotationStore).getState()
+    };
+});
+
+export default EntityPropertyForm;
+
