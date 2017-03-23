@@ -1,6 +1,11 @@
 import React from 'react';
 import AnnotationStore from "../../../stores/AnnotationStore";
 import { connectToStores } from 'fluxible-addons-react';
+import ObjectInput from './inputs/ObjectInput';
+import YearInput from './inputs/YearInput';
+import DateInput from './inputs/DateInput';
+import StringInput from './inputs/StringInput';
+import PropertyHelper from "../../../actions/annotations/utils/PropertyHelper";
 
 /**
  * Created by korovin on 3/23/2017.
@@ -21,19 +26,31 @@ class InputSet extends React.Component {
     }
     initInput() {
         const { curPropType } = this.props.AnnotationStore;
-        return <div class="ui labeled input">
-            <div class="ui label">
-                http://
-            </div>
-            <input type="text" placeholder="lol" />
-        </div>
+        if (!curPropType) {
+            return;
+        }
+
+        if (curPropType.type === PropertyHelper.OBJECT_TYPE_VAL) {
+            return <ObjectInput range={ curPropType.range } />
+        } else if (curPropType.type === PropertyHelper.DATATYPE_TYPE_VAL) {
+            switch (curPropType.range) {
+                case 'date':
+                    return <DateInput />;
+                    break;
+                case 'gYear':
+                    return <YearInput />;
+                    break;
+                default:
+                    return <StringInput />;
+            }
+        } else {
+            return <StringInput />;
+        }
     }
     render() {
-        <div className="field">
+        return <div className="field">
             <label htmlFor="">Add value: </label>
-            <input type="text" name="value" ref="propValue" onChange={ this.handleValueChange.bind(this) }
-                   placeholder="value"
-                   aria-required="true" disabled/>
+            { this.initInput() }
         </div>
     }
 }

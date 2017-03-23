@@ -44,4 +44,12 @@ export default class PropertyHelper {
             return null;
         }
     }
+    
+    static get OBJECT_TYPE_VAL() {
+        return OBJECT_TYPE_VAL;
+    }
+    
+    static get DATATYPE_TYPE_VAL() {
+        return DATATYPE_VAL;
+    }
 }
