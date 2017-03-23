@@ -101,6 +101,9 @@ class AnnotationContextMenu extends React.Component {
             return <MenuItem data={ {type: type} } key={ type } onClick={this.handleAnnotate.bind(this)}>Add { type }</MenuItem>
         });
     }
+    saveAnnotationsBulk() {
+        this.context.executeAction(saveAnnotationsBulk);
+    }
     render() {
         let { types } = this.props.AnnotationStore;
 
@@ -121,6 +124,8 @@ class AnnotationContextMenu extends React.Component {
                     </SubMenu>
                     <MenuItem onClick={this.removeAnnotation.bind(this)}>Remove</MenuItem>
                     <MenuItem onClick={this.getSuggestions.bind(this)}>Get Suggestions</MenuItem>
+                    <MenuItem onClick={this.saveAnnotationsBulk.bind(this)}>Save annotations</MenuItem>
+                    
                     <AddPropertyItem chosen={ this.state.chosen } />
                 </ContextMenu>
             </div>

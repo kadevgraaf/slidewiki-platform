@@ -22,9 +22,13 @@ export default function addAnnotation(context, payload, done) {
         deck: deckId
     };
 
-    context.service.create('annotations.new', body, {timeout: 20 * 1000}, (err, res) => {
-        context.dispatch('REMOVE_SELECTION');
-        context.dispatch('SAVE_ANNOTATION', serialized);
-        done();
-    });
+    context.dispatch('REMOVE_SELECTION');
+    context.dispatch('SAVE_ANNOTATION', serialized);
+    done();
+    
+    // context.service.create('annotations.new', body, {timeout: 20 * 1000}, (err, res) => {
+    //     context.dispatch('REMOVE_SELECTION');
+    //     context.dispatch('SAVE_ANNOTATION', serialized);
+    //     done();
+    // });
 }

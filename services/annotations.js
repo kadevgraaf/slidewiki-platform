@@ -49,6 +49,9 @@ export default {
             case 'annotations.new':
                 saveNewAnnotation(params, callback);
                 break;
+            case 'annotations.savebulk':
+                saveBulkAnnotations(params, callback);
+                break;
             default:
                 return;
         }
