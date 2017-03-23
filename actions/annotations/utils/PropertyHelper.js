@@ -9,12 +9,13 @@ const DATATYPE_VAL = 'datatype';
  * Created by korovin on 3/23/2017.
  */
 export default class PropertyHelper {
-    static getMeta(prop) {
+    static getMeta(prop, property) {
         const type = PropertyHelper.getType(prop);
         return {
             type: type,
             range: PropertyHelper.getRange(prop.range, type),
-            original: prop
+            original: prop,
+            property: property
         }
     }
 

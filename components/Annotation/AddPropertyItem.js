@@ -2,6 +2,7 @@ import React from 'react';
 import { MenuItem } from 'react-contextmenu';
 import Modal from 'react-modal';
 import EntityPropertyForm from './PropertyForm/EntityPropertyForm';
+import Annotation from "../../actions/annotations/classes/Annotation";
 
 const customStyles = {
     content : {
@@ -25,7 +26,8 @@ export default class AddPropertyItem extends React.Component {
         super(props);
         this.state = {
             modalIsOpen: false,
-            type: ''
+            type: '',
+            chosen: ''
         };
     }
     closeModal(e) {
@@ -39,7 +41,8 @@ export default class AddPropertyItem extends React.Component {
         if (this.props.chosen) {
             this.setState({
                 modalIsOpen: true,
-                type: this.props.chosen.attr('typeof')
+                type: this.props.chosen.attr('typeof'),
+                chosen: Annotation.deserializeRDFa(this.props.chosen)
             });
             return;
         }
@@ -54,7 +57,7 @@ export default class AddPropertyItem extends React.Component {
                     onRequestClose={ this.closeModal.bind(this) }
                     style={ customStyles }
                     contentLabel="Add Property">
-                    <EntityPropertyForm closeModal={ this.closeModal.bind(this) } type={ this.state.type } />
+                    <EntityPropertyForm closeModal={ this.closeModal.bind(this) } type={ this.state.type } chosen={ this.state.chosen } />
                 </Modal>
                 <MenuItem onClick={this.onClick.bind(this)}>Add Property</MenuItem>
             </div>

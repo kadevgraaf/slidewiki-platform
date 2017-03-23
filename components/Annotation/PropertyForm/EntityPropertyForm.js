@@ -1,8 +1,7 @@
 import React from 'react';
 import PropertyDropdown from './PropertyDropdown';
 import InputSet from './InputSet';
-import { connectToStores } from 'fluxible-addons-react';
-import AnnotationStore from "../../../stores/AnnotationStore";
+import addProperty from "../../../actions/annotations/addProperty";
 
 /**
  * Created by korovin on 3/22/2017.
@@ -23,9 +22,11 @@ class EntityPropertyForm extends React.Component {
             return;
         }
 
-        const { curPropType } = this.props.AnnotationStore;
-        console.log(value);
-        console.log(curPropType);
+        this.context.executeAction(addProperty, {
+            value: value,
+            chosen: this.props.chosen
+        });
+
         this.props.closeModal();
         // TODO: get all properties from store
     }
@@ -61,16 +62,8 @@ class EntityPropertyForm extends React.Component {
     }
 }
 
-
 EntityPropertyForm.contextTypes = {
     executeAction: React.PropTypes.func.isRequired
 };
 
-EntityPropertyForm = connectToStores(EntityPropertyForm, [AnnotationStore], (context, props) => {
-    return {
-        AnnotationStore: context.getStore(AnnotationStore).getState()
-    };
-});
-
 export default EntityPropertyForm;
-
