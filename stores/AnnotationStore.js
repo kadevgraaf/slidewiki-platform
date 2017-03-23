@@ -22,8 +22,9 @@ class AnnotationStore extends BaseStore {
         this.uriSuggestions = [];
         this.wikiLinks = {};
         this.curProps = [];
+        this.curPropType = null;
     }
-    loadAnnotations() {
+    loadAnnotations(){
         $('.r_entity').hover()
     }
     saveSelection() {
@@ -128,7 +129,9 @@ class AnnotationStore extends BaseStore {
         }
     }
     getPropertyMetaDbpedia(meta) {
-        console.log(meta);
+        this.curPropType = meta;
+        console.log(this.curPropType);
+        this.emitChange();
     }
     getPropertiesDbpedia(props) {
         this.curProps = props;
@@ -145,7 +148,8 @@ class AnnotationStore extends BaseStore {
             selectedText: this.selectedText,
             uriSuggestions: this.uriSuggestions,
             wikiLinks: this.wikiLinks,
-            curProps: this.curProps
+            curProps: this.curProps,
+            curPropType: this.curPropType
         }
     }
     dehydrate() {
@@ -159,7 +163,8 @@ class AnnotationStore extends BaseStore {
             selectedText: this.selectedText,
             uriSuggestions: this.uriSuggestions,
             wikiLinks: this.wikiLinks,
-            curProps: this.curProps
+            curProps: this.curProps,
+            curPropType: this.curPropType
         };
     }
     rehydrate(state) {
@@ -173,6 +178,7 @@ class AnnotationStore extends BaseStore {
         this.uriSuggestions = state.uriSuggestions;
         this.wikiLinks = state.wikiLinks;
         this.curProps = state.curProps;
+        this.curPropType = state.curPropType;
     }
 }
 

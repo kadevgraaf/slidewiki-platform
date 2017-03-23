@@ -2,6 +2,7 @@ import React from 'react';
 import getPropertiesDbpedia from "../../../actions/annotations/getPropertiesDbpedia";
 import AnnotationStore from "../../../stores/AnnotationStore";
 import { connectToStores } from 'fluxible-addons-react';
+import getPropertyMetaDbpedia from "../../../actions/annotations/getPropertyMetaDbpedia";
 
 /**
  * Created by korovin on 3/22/2017.
@@ -14,10 +15,18 @@ class PropertyDropdown extends React.Component {
         }
     }
     componentDidMount() {
-        $(this._select).dropdown();
+        $(this._select).dropdown({
+            onChange: (value, text, $selectedItem) => this.onChange(value, text, $selectedItem)
+        });
 
         this.context.executeAction(getPropertiesDbpedia, {
             type: this.state.type
+        });
+    }
+    onChange(value, text, $selectedItem) {
+        const uri = $selectedItem.attr('value');
+        this.context.executeAction(getPropertyMetaDbpedia, {
+            property: uri
         });
     }
     initItemList() {
@@ -31,7 +40,7 @@ class PropertyDropdown extends React.Component {
 
         return curProps.map(elem => {
             return (
-                <div key={ elem.uri } className="item">
+                <div key={ elem.uri } value={ elem.uri } className="item">
                     { elem.label }
                 </div>
             )
