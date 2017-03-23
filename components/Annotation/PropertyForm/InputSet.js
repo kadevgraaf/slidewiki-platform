@@ -1,5 +1,6 @@
 import React from 'react';
 import AnnotationStore from "../../../stores/AnnotationStore";
+import { connectToStores } from 'fluxible-addons-react';
 
 /**
  * Created by korovin on 3/23/2017.
@@ -48,4 +49,3 @@ InputSet = connectToStores(InputSet, [AnnotationStore], (context, props) => {
 });
 
 export default InputSet;
-

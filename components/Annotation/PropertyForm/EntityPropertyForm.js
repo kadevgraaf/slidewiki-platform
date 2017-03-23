@@ -1,5 +1,6 @@
 import React from 'react';
 import PropertyDropdown from './PropertyDropdown';
+import InputSet from './InputSet';
 
 /**
  * Created by korovin on 3/22/2017.
