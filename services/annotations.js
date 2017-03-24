@@ -117,6 +117,49 @@ function getDbpediaPropertyMeta(params, callback) {
     });
 }
 
+function saveBulkAnnotations(params, callback) {
+    if (!params.annotations) {
+        callback(null, {success: false, results: {}});
+        return;
+    }
+
+    const { semsearch } = Microservices;
+    const uri = semsearch.uri + ":" + semsearch.port + semsearch.path + '/annotations';
+
+    let body = params.annotations.map(anno => {
+        return {
+            body: anno.html,
+            slide: anno.slide,
+            deck: anno.deck,
+            typeof: anno.annotation.typeof,
+            id: anno.annotation.id,
+            resource: anno.annotation.uri,
+            keyword: anno.annotation.name
+        }
+    });
+
+    console.log(body);
+    
+    // rp.post({
+    //     uri: uri,
+    //     headers: {
+    //         'Accept': 'application/json',
+    //         'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify(body)
+    // }).then(res => {
+    //     console.log(callback);
+    //     console.log('SUCC');
+    //     console.log(res);
+    //     callback(null, {
+    //         success: true,
+    //         results: JSON.parse(JSON.stringify(res))
+    //     });
+    // }).catch(err => {
+    //     callback(null, {success: false, results: {}});
+    // });
+}
+
 function saveNewAnnotation(params, callback) {
     if (!params.annotation || !params.html || !params.slide || !params.deck) {
         callback(null, {success: false, results: {}});
