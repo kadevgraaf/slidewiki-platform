@@ -124,7 +124,7 @@ function saveBulkAnnotations(params, callback) {
     }
 
     const { semsearch } = Microservices;
-    const uri = semsearch.uri + ":" + semsearch.port + semsearch.path + '/annotations';
+    const uri = semsearch.uri + ":" + semsearch.port + semsearch.path + '/annotations/bulk ';
 
     let body = params.annotations.map(anno => {
         return {
@@ -138,26 +138,24 @@ function saveBulkAnnotations(params, callback) {
         }
     });
 
-    console.log(body);
-    
-    // rp.post({
-    //     uri: uri,
-    //     headers: {
-    //         'Accept': 'application/json',
-    //         'Content-Type': 'application/json'
-    //     },
-    //     body: JSON.stringify(body)
-    // }).then(res => {
-    //     console.log(callback);
-    //     console.log('SUCC');
-    //     console.log(res);
-    //     callback(null, {
-    //         success: true,
-    //         results: JSON.parse(JSON.stringify(res))
-    //     });
-    // }).catch(err => {
-    //     callback(null, {success: false, results: {}});
-    // });
+    rp.post({
+        uri: uri,
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ list: body })
+    }).then(res => {
+        console.log(callback);
+        console.log('SUCC');
+        console.log(res);
+        callback(null, {
+            success: true,
+            results: JSON.parse(JSON.stringify(res))
+        });
+    }).catch(err => {
+        callback(null, {success: false, results: {}});
+    });
 }
 
 function saveNewAnnotation(params, callback) {
