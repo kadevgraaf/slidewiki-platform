@@ -74,6 +74,11 @@ class Header extends React.Component {
                                   <i className="right plus icon"></i>Add deck
                               </NavLink>
                             </div>
+                            <div className="item">
+                                <NavLink href={'/semsearch/'} className="item" activeClass="active" className="ui right labeled icon button" >
+                                    <i className="add icon"/>Semantic Search
+                                </NavLink>
+                            </div>
                             {notification_locale}
                             <div className="item">{loginButton}<LoginModal/></div>
                         </div>
@@ -92,6 +97,9 @@ class Header extends React.Component {
                 <div className="ui inverted left dimmed sidebar vertical menu" ref="menubar" onClick={this.closeSidebar.bind(this)}>
                     <NavLink className="item" href='/'>
                         <i className="home icon"/> Homepage
+                    </NavLink>
+                    <NavLink className="item" routeName="semSearch">
+                        <i className="add icon"/>Semantic Search
                     </NavLink>
                     <NavLink className="item" routeName="addDeck">
                         <i className="add icon"/>Add Deck

@@ -185,6 +185,19 @@ export default {
             context.executeAction(loadSearchResults, payload, done);
         }
     },
+    semsearch: {
+        path: '/semSearch',
+        method: 'get',
+        page: 'addDeck',
+        title: 'SlideWiki -- Semantic Search',
+        handler: require('../components/SemSearch/SemSearch'),
+        action: (context, payload, done) => {
+            context.dispatch('UPDATE_PAGE_TITLE', {
+                pageTitle: shortTitle + ' | Semantic Search'
+            });
+            context.executeAction(loadAddDeck, null, done);
+        }
+    },
 
     //-----------------------------------DeckPage routes------------------------------
     // selector {id: 'id of parent deck; may contain [0-9-]',
