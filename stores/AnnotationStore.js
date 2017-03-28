@@ -23,6 +23,7 @@ class AnnotationStore extends BaseStore {
         this.wikiLinks = {};
         this.curProps = [];
         this.curPropType = null;
+        this.dbpediaClasses = [];
     }
     loadAnnotations(){
         $('.r_entity').hover()
@@ -128,6 +129,9 @@ class AnnotationStore extends BaseStore {
             this.wikiLinks[binding.subj.value] = binding.link.value;
         }
     }
+    getDbpediaClasses(classes) {
+        this.dbpediaClasses = classes;
+    }
     getPropertyMetaDbpedia(meta) {
         this.curPropType = meta;
         this.emitChange();
@@ -148,7 +152,8 @@ class AnnotationStore extends BaseStore {
             uriSuggestions: this.uriSuggestions,
             wikiLinks: this.wikiLinks,
             curProps: this.curProps,
-            curPropType: this.curPropType
+            curPropType: this.curPropType,
+            dbpediaClasses: this.dbpediaClasses
         }
     }
     dehydrate() {
@@ -163,7 +168,8 @@ class AnnotationStore extends BaseStore {
             uriSuggestions: this.uriSuggestions,
             wikiLinks: this.wikiLinks,
             curProps: this.curProps,
-            curPropType: this.curPropType
+            curPropType: this.curPropType,
+            dbpediaClasses: this.dbpediaClasses
         };
     }
     rehydrate(state) {
@@ -178,6 +184,7 @@ class AnnotationStore extends BaseStore {
         this.wikiLinks = state.wikiLinks;
         this.curProps = state.curProps;
         this.curPropType = state.curPropType;
+        this.dbpediaClasses = state.dbpediaClasses;
     }
 }
 
@@ -196,7 +203,8 @@ AnnotationStore.handlers = {
     'GET_URI_SUGGESTIONS': 'getUriSuggestions',
     'REMOVE_URI_SUGGESTIONS': 'removeUriSuggestions',
     'GET_DBPEDIA_PROPERTY_META': 'getPropertyMetaDbpedia',
-    'GET_DBPEDIA_PROPERTIES': 'getPropertiesDbpedia'
+    'GET_DBPEDIA_PROPERTIES': 'getPropertiesDbpedia',
+    'GET_DBPEDIA_CLASSES': 'getDbpediaClasses'
 };
 
 export default AnnotationStore;

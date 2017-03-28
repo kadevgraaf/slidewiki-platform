@@ -23,6 +23,9 @@ export default {
     name: 'annotations',
     read: (req, resource, params, config, callback) => {
         switch (resource) {
+            case 'annotations.allclasses':
+                getDbpediaClasses(callback);
+                break;
             case 'annotations.suggestions':
                 getDbpediaAnnotations(params, callback);
                 break;
@@ -57,6 +60,28 @@ export default {
         }
     }
 };
+
+function getDbpediaClasses(callback) {
+    const sparql = SPARQLAnnotationHelper.getAllClasses();
+    console.log(sparql);
+    rp.post({
+        uri: DBPEDIA_VIRTUOSO_BASE_URL,
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        form: {
+            query: sparql,
+            format: 'application/json'
+        }
+    }).then((res) => {
+        callback(null, {
+            success: true,
+            results: JSON.parse(res)
+        });
+    }).catch(err => {
+        callback(null, {success: false, results: {}});
+    });
+}
 
 function getDbpediaProperties(params, callback) {
     const { type } = params;

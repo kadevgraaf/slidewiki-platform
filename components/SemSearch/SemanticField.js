@@ -1,6 +1,24 @@
 import React, {Component} from 'react';
+import AnnotationStore from '../../stores/AnnotationStore';
+import { connectToStores } from 'fluxible-addons-react';
+import getDbpediaClasses from "../../actions/annotations/getDbpediaClasses";
 
-export default class SemanticField extends Component {
+class SemanticField extends Component {
+    componentDidMount() {
+        this.context.executeAction(getDbpediaClasses);
+    }
+    getEntities() {
+        let { dbpediaClasses } = this.props.AnnotationStore;
+        if (!dbpediaClasses.length) {
+            return;
+        }
+
+        dbpediaClasses.map(dClass => {
+            console.log(dClass);
+        });
+
+        return null;
+    }
     render() {
         return (
             <div style={{marginTop: '1em'}}>
@@ -13,6 +31,7 @@ export default class SemanticField extends Component {
                             <label htmlFor="entity">Entity type</label>
                             <select name="entity" id="entity">
                                 <option value=' '>Select Entity type</option>
+                                { this.getEntities() }
                             </select>
                         </div>
                         <div className="field">
@@ -45,3 +64,15 @@ export default class SemanticField extends Component {
         )
     }
 }
+
+SemanticField.contextTypes = {
+    executeAction: React.PropTypes.func.isRequired
+};
+
+SemanticField = connectToStores(SemanticField, [AnnotationStore], (context, props) => {
+    return {
+        AnnotationStore: context.getStore(AnnotationStore).getState()
+    }
+});
+
+export default SemanticField;
