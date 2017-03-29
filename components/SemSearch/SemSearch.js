@@ -44,14 +44,14 @@ export default class SemSearch extends Component {
         }
     }
     onSelect(searchstring){
-        this.setState({searchstring: searchstring});
+        this.setState({keywords: searchstring});
     }
     clearInput(){
-        this.setState({searchstring: ''});
+        this.setState({keywords: ''});
         this.refs.keywords.focus();
     }
     onChange(e) {
-        console.log(e.target.value);
+        this.setState({keywords: e.target.value});
     }
     onKeyPress(e) {
         console.log(e.target.value);
@@ -65,13 +65,17 @@ export default class SemSearch extends Component {
                     </h2>
                     <RadioboxSearchType type={this.state.type} onChange={this.onTypeChange.bind(this)} />
                     <div ref={ keywordCont => this._keywordCont = keywordCont }>
-                        <KeywordsInput ref='keywords'
-                                       onSelect={this.onSelect.bind(this)}
-                                       onChange={this.onChange.bind(this)}
-                                       onKeyPress={this.onKeyPress.bind(this)}
-                                       value={decodeURIComponent(this.state.searchstring)}
-                                       placeholder='Type your keywords here'
-                                       clearInputHandler={this.clearInput.bind(this)} />
+                        <form className="ui form success">
+                            <div className="field">
+                                <KeywordsInput ref='keywords'
+                                               onSelect={this.onSelect.bind(this)}
+                                               onChange={this.onChange.bind(this)}
+                                               onKeyPress={this.onKeyPress.bind(this)}
+                                               value={decodeURIComponent(this.state.keywords)}
+                                               placeholder='Type your keywords here'
+                                               clearInputHandler={this.clearInput.bind(this)} />
+                            </div>
+                        </form>
                     </div>
                     <div ref={ semCont => this._semCont = semCont }>
                         <SemanticField />
