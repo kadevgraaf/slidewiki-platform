@@ -20,8 +20,8 @@ class SemanticSearchStore extends BaseStore {
         this.results.push(test);
     }
     initResults(results) {
-        this.results = results;
-        this.emitChange();
+        // this.results = results;
+        // this.emitChange();
     }
     getState() {
         return {

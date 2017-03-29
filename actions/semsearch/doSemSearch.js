@@ -9,3 +9,8 @@ export default function doSemSearch(context, payload, done) {
         done();
     });
 }
+
+function parse(res) {
+    let response = JSON.parse(res.results)
+    // TODO: iterate here and return array of search results
+}

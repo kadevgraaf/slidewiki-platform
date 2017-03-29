@@ -29,9 +29,9 @@ function searchByKeywords(params, callback) {
         callback(null, {success: false, results: {}});
         return;
     }
-    
+
     const { search } = Microservices;
-    const uri = search.uri + '/search?' + formQueryParams(params.keywords);
+    const uri = search.uri + '/search?' + getEncodedParams(params);
     rp.get({
         uri: uri
     }).then(results => {
@@ -43,8 +43,36 @@ function searchByKeywords(params, callback) {
     });
 }
 
-function formQueryParams(keywords) {
-    
+function encodeParam(encodedParams, key, value){
+    if(value.trim() === '')
+        return '';
+
+    return ((encodedParams) ? '&' : '')
+        + encodeURIComponent(key) + '=' + encodeURIComponent(value);
+}
+
+// TODO: awful copy-pasted code from Search Panel. will fix it one day
+function getEncodedParams(params){
+    let queryparams = {
+        keywords: (params && params.keywords)
+            ? params.keywords       // if keywords are set from redirection
+            : (this.refs.keywords.getSelected().trim() || '*:*')
+    };
+
+    // encode params
+    let encodedParams = '';
+    for(let key in queryparams){
+        if(queryparams[key] instanceof Array){
+            for(let el in queryparams[key]){
+                encodedParams += encodeParam(encodedParams, key, queryparams[key][el]);
+            }
+        }
+        else{
+            encodedParams += encodeParam(encodedParams, key, queryparams[key]);
+        }
+    }
+
+    return encodedParams;
 }
 
 function searchBySemantic(params, callback) {
