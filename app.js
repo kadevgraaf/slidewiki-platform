@@ -27,6 +27,7 @@ import ImportStore from './stores/ImportStore';
 import PresentationStore from './stores/PresentationStore';
 import UserNotificationsStore from './stores/UserNotificationsStore';
 import UserRegistrationStore from './stores/UserRegistrationStore';
+import SemanticSearchStore from './stores/SemanticSearchStore';
 import SearchResultsStore from './stores/SearchResultsStore';
 import SearchParamsStore from './stores/SearchParamsStore';
 import AdvancedSearchStore from './stores/AdvancedSearchStore';
@@ -72,6 +73,7 @@ const app = new Fluxible({
         AdvancedSearchStore,
         UserProfileStore,
         ErrorStore,
+        SemanticSearchStore,
         AddDeckStore,
         ResetPasswordStore,
         RevisioningStore,

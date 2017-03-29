@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import SemanticField from './SemanticField/SemanticField';
 import KeywordField from './KeywordField';
 import RadioboxSearchType from './RadioboxSearchType';
+import SemanticSearchResultsPanel from './SearchResults/SemanticSearchResultsPanel';
 
 const KEYWORD_FIELD_TYPE = 'keyword';
 const SEMANTIC_FIELD_TYPE = 'semantic';
@@ -55,6 +56,8 @@ export default class SemSearch extends Component {
                         <SemanticField />
                     </div>
                     <button className="ui primary button" onClick={this.onSearch.bind(this)} style={{marginTop: '1em'}}>Search</button>
+                    <div className="ui divider"></div>
+                    <SemanticSearchResultsPanel />
                 </div>
             </div>
         )
