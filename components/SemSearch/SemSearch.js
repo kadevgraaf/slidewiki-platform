@@ -4,12 +4,13 @@ import KeywordField from './KeywordField';
 import RadioboxSearchType from './RadioboxSearchType';
 import SemanticSearchResultsPanel from './SearchResults/SemanticSearchResultsPanel';
 import KeywordsInput from '../Search/AutocompleteComponents/KeywordsInput';
+import doSemSearch from "../../actions/semsearch/doSemSearch";
 
 const KEYWORD_FIELD_TYPE = 'keyword';
 const SEMANTIC_FIELD_TYPE = 'semantic';
 const HYBRID_FIELD_TYPE = 'hybrid';
 
-export default class SemSearch extends Component {
+class SemSearch extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -23,6 +24,15 @@ export default class SemSearch extends Component {
     }
     onSearch(e) {
         e.preventDefault();
+        if (!this.state.type) {
+            return;
+        }
+
+        this.context.executeAction(doSemSearch, {
+            type: this.state.type,
+            keywords: this.state.keywords,
+            semantic: this.refs.semantics.state
+        });
     }
     onTypeChange(newType) {
         const { type } = this.state;
@@ -67,7 +77,7 @@ export default class SemSearch extends Component {
                     <div ref={ keywordCont => this._keywordCont = keywordCont }>
                         <form className="ui form success">
                             <div className="field">
-                                <KeywordsInput ref='keywords'
+                                <KeywordsInput ref="keywords"
                                                onSelect={this.onSelect.bind(this)}
                                                onChange={this.onChange.bind(this)}
                                                onKeyPress={this.onKeyPress.bind(this)}
@@ -78,7 +88,7 @@ export default class SemSearch extends Component {
                         </form>
                     </div>
                     <div ref={ semCont => this._semCont = semCont }>
-                        <SemanticField />
+                        <SemanticField ref="semantics" />
                     </div>
                     <button className="ui primary button" onClick={this.onSearch.bind(this)} style={{marginTop: '1em'}}>Search</button>
                     <div className="ui divider"></div>
@@ -88,3 +98,9 @@ export default class SemSearch extends Component {
         )
     }
 }
+
+SemSearch.contextTypes = {
+    executeAction: React.PropTypes.func.isRequired
+};
+
+export default SemSearch;

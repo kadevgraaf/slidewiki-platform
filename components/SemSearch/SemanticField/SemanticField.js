@@ -4,12 +4,14 @@ import { connectToStores } from 'fluxible-addons-react';
 import EntityDropdown from './EntityDropdown';
 import ClassPropertyDropdown from './ClassPropertyDropdown';
 
-class SemanticField extends Component {
+export default class SemanticField extends Component {
     constructor(props) {
         super(props);
         this.state = {
             entity: null,
-            prop: null
+            prop: null,
+            filter: null,
+            value: null
         }
     }
     onChangeProp(uri) {
@@ -23,6 +25,12 @@ class SemanticField extends Component {
             $(propDropdown).addClass('loading');
         }
     }
+    onFilterChange(e) {
+        this.setState({filter: e.target.value});
+    }
+    onValueChange(e) {
+        this.setState({value: e.target.value});
+    }
     render() {
         return (
             <div style={{marginTop: '1em'}}>
@@ -35,7 +43,7 @@ class SemanticField extends Component {
                         <ClassPropertyDropdown ref="classDropdown" entity={this.state.entity} prop={this.state.prop} onChangeProp={this.onChangeProp.bind(this)} />
                         <div className="field">
                             <label htmlFor="filter">Filter</label>
-                            <select name="filter" id="filter">
+                            <select name="filter" id="filter" onChange={this.onFilterChange.bind(this)}>
                                 <option value=' '>Filter</option>
                                 <option value='less'>Less (&lt;)</option>
                                 <option value='greater'>Greater (&gt;)</option>
@@ -49,6 +57,7 @@ class SemanticField extends Component {
                             <label htmlFor="value">Value</label>
                             <input type="text" name="value" ref="value"
                                    placeholder="Value"
+                                   onChange={this.onValueChange.bind(this)}
                                    aria-required="true" disabled/>
                         </div>
                     </div>
@@ -57,15 +66,3 @@ class SemanticField extends Component {
         )
     }
 }
-
-SemanticField.contextTypes = {
-    executeAction: React.PropTypes.func.isRequired
-};
-
-SemanticField = connectToStores(SemanticField, [AnnotationStore], (context, props) => {
-    return {
-        AnnotationStore: context.getStore(AnnotationStore).getState()
-    }
-});
-
-export default SemanticField;
