@@ -16,8 +16,7 @@ export default function onSlideExecute(context, payload, done) {
     dataSources = dataSources? dataSources: [];
 
     let { title, content, speakernotes } = slideStore;
-    console.log('tags upload');
-    console.log(tags);
+
     context.executeAction(saveSlide, {
         id: sid,
         deckID: id,
