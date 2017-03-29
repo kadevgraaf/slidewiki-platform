@@ -44,4 +44,18 @@ export default class SPARQLAnnotationHelper {
             }
         `;
     }
+
+    static getPropertiesForClass(mclass) {
+        return `
+            SELECT DISTINCT ?property ?label WHERE{
+            {
+              ?property rdfs:domain ?class . 
+              <${mclass}> rdfs:subClassOf+ ?class.
+            } UNION {
+              ?property rdfs:domain <${mclass}>.
+            }
+            ?property <http://www.w3.org/2000/01/rdf-schema#label> ?label .
+                            FILTER ( LANG(?label) = "en" )
+            }`;
+    }
 }

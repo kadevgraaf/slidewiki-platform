@@ -2,25 +2,53 @@ import React, {Component} from 'react';
 import AnnotationStore from '../../stores/AnnotationStore';
 import { connectToStores } from 'fluxible-addons-react';
 import getDbpediaClasses from "../../actions/annotations/getDbpediaClasses";
+import getClassPropertiesDbpedia from "../../actions/annotations/getClassPropertiesDbpedia";
 
 class SemanticField extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            entity: ''
+            entity: null,
+            prop: null
         }
     }
     componentDidMount() {
         $(this._select).dropdown({
             onChange: (value, text, $selectedItem) => this.onChange(value, text, $selectedItem)
-            // , onAdd: (value, text, $choice) => this.onAdd(value, text, $choice)
+        });
+
+        $(this._propSelect).dropdown({
+            onChange: (value, text, $selectedItem) => this.onPropChange(value, text, $selectedItem)
         });
 
         this.context.executeAction(getDbpediaClasses);
     }
     onChange(value, text, $selectedItem) {
         const uri = $selectedItem.attr('value');
-        // TODO: init properties according to entity
+        if (this.state.entity !== uri) {
+            this.setState({entity: uri});
+            if (this.state.prop) {
+                $(this._propSelect).dropdown('clear');
+                $(this._propSelect).addClass('loading');
+            }
+            this.context.executeAction(getClassPropertiesDbpedia, {
+                type: uri
+            });
+        }
+    }
+    onPropChange(value, text, $selectedItem) {
+        if (!$selectedItem) {
+            return;
+        }
+
+        const uri = $selectedItem.attr('value');
+
+        if (this.state.prop === uri) {
+            return;
+        }
+        this.setState({prop: uri});
+
+        // TODO: process uri
     }
     getEntities(dbpediaClasses) {
         if (!dbpediaClasses.length) {
@@ -32,10 +60,23 @@ class SemanticField extends Component {
             return <div value={dClass.uri} key={dClass.uri} className="item">
                 {dClass.label}
             </div>;
-        });;
+        });
+    }
+    getProperties(curClassProps) {
+        if (!curClassProps.length) {
+            return;
+        }
+        $(this._propSelect).removeClass('loading');
+
+        return curClassProps.map(dClass => {
+            return <div value={dClass.uri} key={dClass.uri} className="item">
+                {dClass.label}
+            </div>;
+        });
     }
     render() {
         let { dbpediaClasses } = this.props.AnnotationStore;
+        let { curClassProps } = this.props.AnnotationStore;
 
         return (
             <div style={{marginTop: '1em'}}>
@@ -56,9 +97,13 @@ class SemanticField extends Component {
                         </div>
                         <div className="field">
                             <label htmlFor="property">Property type</label>
-                            <select name="property" id="property">
-                                <option value=' '>Select Property</option>
-                            </select>
+                            <div ref={propSelect => this._propSelect = propSelect } className="ui fluid search selection dropdown loading">
+                                <i className="dropdown icon" />
+                                <div className="text">Select Property</div>
+                                <div className="menu">
+                                    { this.getProperties(curClassProps) }
+                                </div>
+                            </div>
                         </div>
                         <div className="field">
                             <label htmlFor="filter">Filter</label>
