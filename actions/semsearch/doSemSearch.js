@@ -3,5 +3,9 @@
  */
 export default function doSemSearch(context, payload, done) {
     const { type } = payload;
-    console.log(payload);
+    context.service.read('semsearch.' + type, payload, {timeout: 20 * 1000}, (err, res) => {
+        // TODO: parse here results
+        context.dispatch('INIT_SEMSEARCH_RESULTS', res);
+        done();
+    });
 }

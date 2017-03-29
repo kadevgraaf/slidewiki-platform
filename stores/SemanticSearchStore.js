@@ -38,7 +38,7 @@ class SemanticSearchStore extends BaseStore {
 
 SemanticSearchStore.storeName = 'SemanticSearchStore';
 SemanticSearchStore.handlers = {
-    'INIT_RESULTS': 'initResults'
+    'INIT_SEMSEARCH_RESULTS': 'initResults'
 };
 
 export default SemanticSearchStore;
