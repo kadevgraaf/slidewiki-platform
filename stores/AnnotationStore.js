@@ -131,6 +131,7 @@ class AnnotationStore extends BaseStore {
     }
     getDbpediaClasses(classes) {
         this.dbpediaClasses = classes;
+        this.emitChange();
     }
     getPropertyMetaDbpedia(meta) {
         this.curPropType = meta;

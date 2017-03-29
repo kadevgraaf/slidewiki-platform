@@ -4,22 +4,39 @@ import { connectToStores } from 'fluxible-addons-react';
 import getDbpediaClasses from "../../actions/annotations/getDbpediaClasses";
 
 class SemanticField extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            entity: ''
+        }
+    }
     componentDidMount() {
+        $(this._select).dropdown({
+            onChange: (value, text, $selectedItem) => this.onChange(value, text, $selectedItem)
+            // , onAdd: (value, text, $choice) => this.onAdd(value, text, $choice)
+        });
+
         this.context.executeAction(getDbpediaClasses);
     }
-    getEntities() {
-        let { dbpediaClasses } = this.props.AnnotationStore;
+    onChange(value, text, $selectedItem) {
+        const uri = $selectedItem.attr('value');
+        // TODO: init properties according to entity
+    }
+    getEntities(dbpediaClasses) {
         if (!dbpediaClasses.length) {
             return;
         }
+        $(this._select).removeClass('loading');
 
-        dbpediaClasses.map(dClass => {
-            console.log(dClass);
-        });
-
-        return null;
+        return dbpediaClasses.map(dClass => {
+            return <div value={dClass.uri} key={dClass.uri} className="item">
+                {dClass.label}
+            </div>;
+        });;
     }
     render() {
+        let { dbpediaClasses } = this.props.AnnotationStore;
+
         return (
             <div style={{marginTop: '1em'}}>
                 <h3 className="ui header">
@@ -29,10 +46,13 @@ class SemanticField extends Component {
                     <div className="four fields">
                         <div className="field">
                             <label htmlFor="entity">Entity type</label>
-                            <select name="entity" id="entity">
-                                <option value=' '>Select Entity type</option>
-                                { this.getEntities() }
-                            </select>
+                            <div ref={select => this._select = select } className="ui fluid search selection dropdown loading">
+                                <i className="dropdown icon" />
+                                <div className="text">Select Entity type</div>
+                                <div className="menu">
+                                    { this.getEntities(dbpediaClasses) }
+                                </div>
+                            </div>
                         </div>
                         <div className="field">
                             <label htmlFor="property">Property type</label>

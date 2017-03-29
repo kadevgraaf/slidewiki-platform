@@ -2,16 +2,20 @@
  * Created by korovin on 3/28/2017.
  */
 export default function getDbpediaClasses(context, payload, done) {
-    context.service.read('annotations.allclasses', {}, {timeout: 20 * 1000}, (err, res) => {
-        let bindings = res.results.results.bindings;
-        if (bindings.length) {
-            context.dispatch('GET_DBPEDIA_CLASSES', parse(bindings));
-        }
+    let res = require('../../assets/json/dbpedia.json');
+    let bindings = res.results.bindings;
+    if (bindings.length) {
+        context.dispatch('GET_DBPEDIA_CLASSES', parse(bindings));
+    }
 
-        done();
-    });
+    done();
 }
 
 function parse(bindings) {
-    console.log(bindings);
+    return bindings.map(binding => {
+        return {
+            label: binding.label.value.charAt(0).toUpperCase() + binding.label.value.slice(1),
+            uri: binding.x.value
+        }
+    })
 }

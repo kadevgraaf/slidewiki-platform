@@ -64,22 +64,9 @@ export default {
 function getDbpediaClasses(callback) {
     const sparql = SPARQLAnnotationHelper.getAllClasses();
     console.log(sparql);
-    rp.post({
-        uri: DBPEDIA_VIRTUOSO_BASE_URL,
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        form: {
-            query: sparql,
-            format: 'application/json'
-        }
-    }).then((res) => {
-        callback(null, {
-            success: true,
-            results: JSON.parse(res)
-        });
-    }).catch(err => {
-        callback(null, {success: false, results: {}});
+    callback(null, {
+        success: true,
+        results: require('../assets/json/dbpedia.json')
     });
 }
 
