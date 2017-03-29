@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import SemanticField from './SemanticField';
+import SemanticField from './SemanticField/SemanticField';
 import KeywordField from './KeywordField';
 import RadioboxSearchType from './RadioboxSearchType';
 
