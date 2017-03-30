@@ -1,5 +1,6 @@
 import rp from 'request-promise';
 import { Microservices } from '../configs/microservices';
+import SearchParser from '../actions/semsearch/utils/SearchParser';
 
 /**
  * Created by korovin on 3/29/2017.
@@ -36,9 +37,38 @@ function searchByKeywords(params, callback) {
         uri: uri
     }).then(results => {
         // TODO: parse results
-        callback(null, {
-            success: true,
-            results: JSON.parse(JSON.stringify(results))
+        let res = JSON.parse(JSON.stringify(results));
+        if (!res) {
+            callback(null, {success: false, results: {}});
+        }
+
+        let { response } = JSON.parse(res);
+        let parsedRes = SearchParser.parse(response);
+
+        // iterate here and return array of search results
+        let deckPromises = getDeckPromises(parsedRes);
+
+        Promise.all(deckPromises).then(_ => {
+            callback(null, {
+                success: true,
+                results: parsedRes
+            });
+        }).catch(err =>
+            callback(null, {success: false, results: {}})
+        );
+    });
+}
+
+function getDeckPromises(parsedRes) {
+    return parsedRes.map(obj => {
+        const uri = Microservices.deck.uri + '/deck/' + obj.id;
+        return rp.get({uri: uri}).then(deckRes => {
+            let deckObj = JSON.parse(deckRes);
+            obj.addDeckInfo(deckObj);
+            return Promise.resolve(deckRes);
+        }).catch(err => {
+            console.log(err);
+            return Promise.resolve(err);
         });
     });
 }

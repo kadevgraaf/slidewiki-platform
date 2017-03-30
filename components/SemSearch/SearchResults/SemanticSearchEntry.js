@@ -16,13 +16,13 @@ export default class SemanticSearchEntry extends Component {
                                             <h3><a href={result.link}>{result.title}</a></h3>
                                         </div>
                                         <div className="row">
-                                            {result.description}
+                                            <b>Description: </b>{result.description}
                                         </div>
                                         <div className="row">
-                                            {result.kind} last modified: {result.lastModified}
+                                            <b>{result.kind} last modified:</b> {result.lastUpdate}
                                         </div>
                                         <div className="row">
-                                            <span>Owner: <a href={result.user.link}>{result.user.username}</a></span>
+                                            <span><b>Owner:</b> <a href={result.user.link}>{result.user.username}</a></span>
                                         </div>
                                     </div>
                                 </div>
