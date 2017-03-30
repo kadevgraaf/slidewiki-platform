@@ -10,11 +10,11 @@ class SemanticSearchResultsPanel extends Component {
             <div className="ui container">
                 <div className="ui content">
                     <h2 className="ui header" style={{marginTop: '1em'}}>Search Results</h2>
-                    <div className="ui centered grid">
+                    { results.length? <div className="ui centered grid">
                         <div className="twelve wide column">
                             <SemanticSearchResultsList items={ results } />
                         </div>
-                    </div>
+                    </div> : 'No results found' }
                 </div>
             </div>
         )
