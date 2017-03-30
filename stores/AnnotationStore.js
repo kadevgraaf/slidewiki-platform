@@ -4,7 +4,7 @@ import 'rangy/lib/rangy-selectionsaverestore';
 import TooltipCreator from '../actions/annotations/utils/TooltipCreator';
 
 const DEFAULT_OPTION = 'Person';
-const TYPE_REGEX = /Dbpedia:(Place|Organisation|Person|CreativeWork|Product)/;
+const TYPE_REGEX = /DBpedia:(Place|Organisation|Person|CreativeWork|Product)/;
 
 /**
  * Created by korovin on 3/11/2017.
