@@ -106,7 +106,7 @@ function getEncodedParams(params){
 }
 
 function searchBySemantic(params, callback) {
-
+    console.log(params);
 }
 
 function searchHybrid(params, callback) {

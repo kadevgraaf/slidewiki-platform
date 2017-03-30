@@ -16,6 +16,7 @@ export default class SemanticField extends Component {
     }
     onChangeProp(uri) {
         this.setState({prop: uri});
+        $(this.refs.filter).prop('disabled', !this.state.prop || this.state.prop === ' ');
     }
     onChangeEntity(uri) {
         this.setState({entity: uri});
@@ -23,10 +24,12 @@ export default class SemanticField extends Component {
             let propDropdown = this.refs.classDropdown.refs.wrappedElement._propSelect;
             $(propDropdown).dropdown('clear');
             $(propDropdown).addClass('loading');
+            $(this.refs.filter).prop('disabled', true);
         }
     }
     onFilterChange(e) {
         this.setState({filter: e.target.value});
+        $(this.refs.value).prop('disabled', !e.target.value || e.target.value === ' ');
     }
     onValueChange(e) {
         this.setState({value: e.target.value});
@@ -43,7 +46,7 @@ export default class SemanticField extends Component {
                         <ClassPropertyDropdown ref="classDropdown" entity={this.state.entity} prop={this.state.prop} onChangeProp={this.onChangeProp.bind(this)} />
                         <div className="field">
                             <label htmlFor="filter">Filter</label>
-                            <select name="filter" id="filter" onChange={this.onFilterChange.bind(this)}>
+                            <select name="filter" id="filter" ref="filter" onChange={this.onFilterChange.bind(this)} disabled>
                                 <option value=' '>Filter</option>
                                 <option value='less'>Less (&lt;)</option>
                                 <option value='greater'>Greater (&gt;)</option>
