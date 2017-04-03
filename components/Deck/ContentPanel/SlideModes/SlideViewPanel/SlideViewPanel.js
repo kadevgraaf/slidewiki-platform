@@ -8,6 +8,7 @@ import AnnotationContextMenu from '../../../../Annotation/AnnotationContextMenu'
 const ReactDOM = require('react-dom');
 import { ContextMenu, MenuItem, ContextMenuTrigger, SubMenu } from 'react-contextmenu';
 import SelectionPopover from 'react-selection-popover';
+import AddAnnotationPopover from '../../../../Annotation/Popover/AddAnnotationPopover';
 
 class SlideViewPanel extends React.Component {
     constructor(props) {
@@ -68,8 +69,7 @@ class SlideViewPanel extends React.Component {
                                             onSelect={() => {this.setState({showPopover: true})}}
                                             onDeselect={() => {this.setState({showPopover: false})}}
                                         >
-                                            <button>save</button>
-                                            <button>share</button>
+                                            <AddAnnotationPopover />
                                         </SelectionPopover>
                                     </section>
                                 </div>
