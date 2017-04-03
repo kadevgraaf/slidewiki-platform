@@ -5,6 +5,7 @@ import SlideViewStore from '../../../../../stores/SlideViewStore';
 import ResizeAware from 'react-resize-aware';
 import { findDOMNode } from 'react-dom';
 import AnnotationContextMenu from '../../../../Annotation/AnnotationContextMenu';
+import addTempSelection from "../../../../../actions/annotations/addTempSelection";
 const ReactDOM = require('react-dom');
 import { ContextMenu, MenuItem, ContextMenuTrigger, SubMenu } from 'react-contextmenu';
 import SelectionPopover from 'react-selection-popover';
@@ -14,7 +15,19 @@ class SlideViewPanel extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            showPopover: false
+            showPopover: false,
+            chosen: null
+        }
+    }
+    onSelect() {
+        this.context.executeAction(addTempSelection);
+        this.getHighlightedOnOpened();
+        this.setState({showPopover: true});
+    }
+    getHighlightedOnOpened() {
+        let chosenElement = $('#inlineContent').find('.r_highlight');
+        if (chosenElement) {
+            this.setState({chosen: chosenElement});
         }
     }
     render() {
@@ -66,10 +79,10 @@ class SlideViewPanel extends React.Component {
                                         />
                                         <SelectionPopover
                                             showPopover={this.state.showPopover}
-                                            onSelect={() => {this.setState({showPopover: true})}}
+                                            onSelect={this.onSelect.bind(this)}
                                             onDeselect={() => {this.setState({showPopover: false})}}
                                         >
-                                            <AddAnnotationPopover />
+                                            <AddAnnotationPopover chosen={this.state.chosen} />
                                         </SelectionPopover>
                                     </section>
                                 </div>
@@ -156,6 +169,10 @@ class SlideViewPanel extends React.Component {
         }
     }
 }
+
+SlideViewPanel.contextTypes = {
+    executeAction: React.PropTypes.func.isRequired
+};
 
 SlideViewPanel = connectToStores(SlideViewPanel, [SlideViewStore], (context, props) => {
     return {
