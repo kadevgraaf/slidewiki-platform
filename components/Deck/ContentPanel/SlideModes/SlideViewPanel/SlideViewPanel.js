@@ -7,8 +7,15 @@ import { findDOMNode } from 'react-dom';
 import AnnotationContextMenu from '../../../../Annotation/AnnotationContextMenu';
 const ReactDOM = require('react-dom');
 import { ContextMenu, MenuItem, ContextMenuTrigger, SubMenu } from 'react-contextmenu';
+import SelectionPopover from 'react-selection-popover';
 
 class SlideViewPanel extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            showPopover: false
+        }
+    }
     render() {
         //styles should match slideContentEditor for consistency
         const compHeaderStyle = {
@@ -52,7 +59,18 @@ class SlideViewPanel extends React.Component {
                             <div className="reveal">
                                 <div className="slides">
                                     <section className="present"  style={sectionElementStyle}>
-                                        <div id="inlineContent" dangerouslySetInnerHTML={{__html:this.props.SlideViewStore.content}} />
+                                        <div id="inlineContent"
+                                             dangerouslySetInnerHTML={{__html:this.props.SlideViewStore.content}}
+                                             data-selectable
+                                        />
+                                        <SelectionPopover
+                                            showPopover={this.state.showPopover}
+                                            onSelect={() => {this.setState({showPopover: true})}}
+                                            onDeselect={() => {this.setState({showPopover: false})}}
+                                        >
+                                            <button>save</button>
+                                            <button>share</button>
+                                        </SelectionPopover>
                                     </section>
                                 </div>
                                 <br />
