@@ -13,7 +13,10 @@ import SlideViewStore from './stores/SlideViewStore';
 import SlideEditStore from './stores/SlideEditStore';
 import DataSourceStore from './stores/DataSourceStore';
 import TagsStore from './stores/TagsStore';
+<<<<<<< HEAD
 import AnnotationStore from './stores/AnnotationStore';
+=======
+>>>>>>> master
 import ActivityFeedStore from './stores/ActivityFeedStore';
 import DeckTreeStore from './stores/DeckTreeStore';
 import TranslationStore from './stores/TranslationStore';
@@ -35,8 +38,10 @@ import ErrorStore from './stores/ErrorStore';
 import AddDeckStore from './stores/AddDeckStore';
 import ResetPasswordStore from './stores/ResetPasswordStore';
 import RevisioningStore from './stores/RevisioningStore';
+import SendReportStore from './stores/SendReportStore';
 import DeckListStore from './stores/DeckListStore';
 import ContentActionsFooterStore from './stores/ContentActionsFooterStore';
+import ServiceErrorStore from './stores/ServiceErrorStore';
 
 // create new fluxible instance & register all stores
 const app = new Fluxible({
@@ -53,7 +58,10 @@ const app = new Fluxible({
         SlideEditStore,
         DataSourceStore,
         TagsStore,
+<<<<<<< HEAD
         AnnotationStore,
+=======
+>>>>>>> master
         ActivityFeedStore,
         DeckTreeStore,
         TranslationStore,
@@ -75,8 +83,10 @@ const app = new Fluxible({
         AddDeckStore,
         ResetPasswordStore,
         RevisioningStore,
+        SendReportStore,
         DeckListStore,
-        ContentActionsFooterStore
+        ContentActionsFooterStore,
+	    ServiceErrorStore
     ]
 });
 

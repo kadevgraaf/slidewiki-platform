@@ -1,3 +1,4 @@
+'use strict';
 let webpack = require('webpack');
 let path = require('path');
 const host = '127.0.0.1';

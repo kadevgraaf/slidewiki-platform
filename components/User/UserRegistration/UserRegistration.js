@@ -465,6 +465,7 @@ class UserRegistration extends React.Component {
                                 <label style={signUpLabelStyle}>First name * </label>
                                 <div className="ui icon input"><input type="text" id="firstname" name="firstname" ref="firstname" placeholder="First name" autoFocus aria-required="true"/></div>
                             </div>
+<<<<<<< HEAD
                             <div className="ui inline field">
                                 <label style={signUpLabelStyle}>Last name * </label>
                                 <div className="ui icon input"><input type="text" id="lastname" name="lastname" ref="lastname" placeholder="Last name" aria-required="true"/></div>
@@ -488,6 +489,31 @@ class UserRegistration extends React.Component {
                             <div className="ui inline field">
                                 <label style={signUpLabelStyle}>Re-enter password * </label>
                                 <div className="ui icon input"><input type="password" id="reenterpassword" name="reenterpassword" ref="reenterpassword" placeholder="Re-enter password" aria-required="true"/></div>
+=======
+                            <div className="ui inline required field">
+                               <label style={signUpLabelStyle} id="LastName">Last name</label>
+                                <div className="ui icon input"><input type="text" aria-labelledby="LastName" name="lastname" ref="lastname" aria-required="true" placeholder="Last name" /></div>
+                            </div>
+                            <div className={usernameClasses} data-tooltip={usernameToolTipp} data-position="top center" data-inverted="" onBlur={this.checkUsername.bind(this)}>
+                                <label style={signUpLabelStyle} id="username_label">User name </label>
+                                <div className="ui icon input"><i className={usernameIconClasses}/><input type="text" aria-labelledby="username_label" name="username" ref="username" placeholder="Username" aria-required="true"/></div>
+                            </div>
+                            <div className={emailClasses} data-tooltip={emailToolTipp} data-position="top center" data-inverted="" onBlur={this.checkEmail.bind(this)}>
+                                <label style={signUpLabelStyle} id="email_label">Email</label>
+                                <div className="ui icon input"><i className={emailIconClasses}/><input type="text" aria-labelledby="email_label" name="email" ref="email" placeholder="Email" aria-required="true"/></div>
+                            </div>
+                            <div className="ui inline required field">
+                                <label style={signUpLabelStyle} id="reenteremail_label">Re-enter email</label>
+                                <div className="ui icon input"><input type="text" id="reenteremail" name="reenteremail" ref="reenteremail" placeholder="Re-enter email" aria-labelledby="reenteremail_label" aria-required="true"/></div>
+                            </div>
+                            <div className="ui inline required field">
+                                <label style={signUpLabelStyle} id="password_label">Password</label>
+                                <div className="ui icon input"><input type="password" aria-labelledby="password_label" name="password" ref="password" placeholder="Password" aria-required="true"/></div>
+                            </div>
+                            <div className="ui inline field">
+                                <label style={signUpLabelStyle} id="reenterpassword_label">Re-enter password</label>
+                                <div className="ui icon input"><input type="password" aria-labelledby="reenterpassword_label" name="reenterpassword" ref="reenterpassword" placeholder="Re-enter password" aria-required="true"/></div>
+>>>>>>> master
                             </div>
                             <div >
                                 <input type="hidden" id="recaptcha" name="recaptcha"></input>
