@@ -104,7 +104,7 @@ class SearchPanel extends React.Component {
         });
 
         this.refs.keywords.blur();
-
+        
         return false;
     }
     render() {
@@ -172,6 +172,15 @@ class SearchPanel extends React.Component {
                                     <label htmlFor="language">Language</label>
                                     <select name='language' onChange={this.onChange.bind(this)} value={this.state.language} multiple='' id='language' className='ui fluid search dropdown' ref='language'>
                                       <option value=' '>Select Language</option>
+<<<<<<< HEAD
+                                      <option value='en'>English</option>
+                                      <option value='de'>German</option>
+                                      <option value='el'>Greek</option>
+                                      <option value='it'>Italian</option>
+                                      <option value='pt'>Portugese</option>
+                                      <option value='sr'>Serbian</option>
+                                      <option value='es'>Spanish</option>
+=======
                                       <option value='en_GB'>English</option>
                                       <option value='de_DE'>German</option>
                                       <option value='el_GR'>Greek</option>
@@ -179,6 +188,7 @@ class SearchPanel extends React.Component {
                                       <option value='pt_PT'>Portuguese</option>
                                       <option value='sr_RS'>Serbian</option>
                                       <option value='es_ES'>Spanish</option>
+>>>>>>> master
                                     </select>
                                 </div>
 

@@ -50,7 +50,6 @@ export default {
                     content: err
                 }, {});
             });
-
             let revisionCountPromise = rp.get({uri: Microservices.deck.uri + '/deck/' + args.sid + '/revisionCount'}).catch((err) => {
                 callback({
                     msg: 'Error in retrieving revisions count',
@@ -176,9 +175,6 @@ export default {
         req.reqId = req.reqId ? req.reqId : -1;
         log.info({Id: req.reqId, Service: __filename.split('/').pop(), Resource: resource, Operation: 'update', Method: req.method});
         if (resource === 'deck.update') {
-            //logger.info({reqId: req.reqId, file: __filename.split('/').pop(), Resource: resource});
-//            if (params.tags.length === 1 && params.tags[0].length === 0)
-//                params.tags = undefined;
             let toSend = {
                 description: params.description ? params.description : 'empty',
                 language: params.language,
